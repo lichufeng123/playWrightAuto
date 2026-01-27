@@ -1,0 +1,18 @@
+{
+  "cookies": [],
+  "origins": [
+    {
+      "origin": "https://test-base-platform.insight-aigc.com",
+      "localStorage": [
+        {
+          "name": "accessToken",
+          "value": "{\"value\":\"eyJ0eXAiOiJKV1QiLCJraWQiOiJwcml2YXRlLTIwMjUtMDktMDEiLCJhbGciOiJSUzI1NiJ9.eyJpc3MiOiJ1c2VyLXNlcnZlciIsImF1ZCI6ImdhdGV3YXkiLCJzdWIiOiIxMDA0MzciLCJ1c2VySWQiOjEwMDQzNywiaWF0IjoxNzY5NDg1ODAyLCJleHAiOjE3NzAwOTA2MDJ9.YqA6TFm1ZpmItKujNhOewQHFO7_08arGpgJPGo64rW0aeHYvb1Z_S6NYqcTgIGLJ2i7rGUz1XFcDNVAEY9lReJdRZKkB39RzD6-j7JIv97mfPnznX26LC7iNvXvE2svyGsgnm8kYYJCwtqnSk2faQdKNIjOSVxZ3LDrJHoBj4j9yOR3nmAZKungUf9Ji0vzdgYl0BEdOj57qb6Swn087yP9mInjzG-fhd2L3BzM-LQBPhuBpip6dJc7H1kil9DOxQkBvc9KUAcebwccOIWvsjlG5ZzSeFubqn47bYC2CjIvmXjYByFUsrHdqQy_x2zlKo97oSjTr6bhF4-x2YsHnlA\",\"expiration\":1770090602552}"
+        },
+        {
+          "name": "isLoggedIn",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+}
