@@ -20,7 +20,7 @@ for(const data of Object.values(validLoginData)){
 test('login failed with wrong code', async ({ page }) => {
   const loginPage = new LoginPage(page);
 
-  await loginPage.goto();
+  await loginPage.open();
   await loginPage.loginWith(invalidLoginData);
 //   await loginPage.login('invalidLoginData.phone', 'invalidLoginData.code');
 

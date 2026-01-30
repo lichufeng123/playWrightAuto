@@ -3,13 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "test:ui": "npx playwright test",
+    "test:ui:test": "BASE_URL=https://test-base-platform.insight-aigc.com npx playwright test",
+    "test:ui:staging": "BASE_URL=https://base-platform.insight-aigc.com npx playwright test"
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
-    "@types/node": "^25.0.10"
+    "@types/node": "^25.0.10",
+    "dotenv": "^17.2.3"
   }
 }

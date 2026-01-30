@@ -14,7 +14,7 @@ export class HomePage {
     await expect(this.startButton).toBeEnabled();
   }
 
-  async startUse(): Promise<void> {
+  async startUse(): Promise<SqueezePage> {
     await this.waitForReady();
     await this.startButton.click();
     const squeezePage = new SqueezePage(this.page)

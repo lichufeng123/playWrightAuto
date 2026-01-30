@@ -3,6 +3,7 @@ import { Page, Locator, expect} from '@playwright/test';
 export class SqueezePage {
     readonly page : Page;
     readonly AgentTab: Locator;
+    readonly AgentHeader: Locator;
 
     constructor(page: Page){
         this.page = page;
