@@ -20,18 +20,14 @@ export class LoginPage {
   async open() {
     await this.page.goto('/login');
   }
-  async openGlobal() {
-    await this.page.goto('https://test-base-platform.insight-aigc.com/login');
-  }
 
   async loginWith(data:{phone:string;code:string}) {
     await this.phoneInput.fill(data.phone);
-    ;
     await Promise.all([
         this.page.waitForResponse(response =>
             response.url().includes('/getSmsCode') && response.status() == 200
             ),
-        await this.codeButton.click(),
+        this.codeButton.click(),
         ]);
     await this.codeInput.fill(data.code);
     await this.loginButton.click();

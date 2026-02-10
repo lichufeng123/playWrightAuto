@@ -4,156 +4,208 @@ export class AgentPage {
     readonly page: Page;
     readonly agentList: Locator;
     readonly addAgentListButton: Locator;
-    readonly searchBox: Locator;
-    readonly searchResult: Locator;
-    readonly addAgentButton: Locator;
-    readonly newChatButton: Locator;
-
-
     readonly messageInput: Locator;
     readonly sendButton: Locator;
     readonly stopButton: Locator;
-    readonly aiMessages: Locator;
-
-    readonly historyTab: Locator;
-    readonly historyListLocator: Locator;
+    readonly newChatButton: Locator;
 
     constructor(page: Page) {
         this.page = page;
-        // 员工列表
+        // 侧边栏整体
         this.agentList = page.getByRole('complementary');
-        // 添加员工按钮
-        this.addAgentListButton = page.getByRole('button').first();
-        // 搜索框
-        this.searchBox = page.getByRole('textbox', { name: '输入AI员工名称查询' });
-        // 搜索结果
-        this.searchResult = page.getByText('我以强大的上下文处理能力和严谨的推理见长，特别擅长处理长文档分析、进行深度思考与总结归纳，提供细致周到的建议。');
-        // 添加员工按钮
-        this.addAgentButton = page.getByRole('button', { name: '添加员工' });
-        //新对话按钮
-        this.newChatButton = page.getByText('新建对话');
-        // 消息输入栏
-        this.messageInput = page.getByRole('textbox');
-        // 输入框-发送键
-        this.sendButton = page.getByRole('button', { name: ' 发送' });
-        // 输入框-发送键
-        this.stopButton = page.getByRole('button', { name: ' 终止' });
+        // 添加员工按钮 (限制在侧边栏内，通常是搜索框旁边的 + 号)
+        this.addAgentListButton = this.agentList.getByRole('button').first();
 
-        // History
-        this.historyTab = page.getByRole('complementary').getByText('历史记录-勿删');
-        this.historyListLocator = page.getByText('历史对话');
+        // Chat area (selectors vary by agent type; keep them resilient and scoped to main)
+        const main = page.getByRole('main');
+
+        // 消息输入框
+        this.messageInput = main.getByRole('textbox').first();
+        // 发送按钮
+        this.sendButton = main.getByRole('button', { name: /发送/ }).first();
+        // 停止按钮 (正在生成态，部分员工不会出现)
+        this.stopButton = main.getByRole('button', { name: /终止/ }).first();
+        // 新建会话按钮（有些版本不是 button）
+        this.newChatButton = main.getByText(/新建(对话|会话)/, { exact: true }).first();
     }
 
+    // 获取特定名称的员工列项
     agentItemByName(name: string): Locator {
-        return this.agentList.getByText(name, { exact: true });
-    }
-    messageByAgent(text: string): Locator {
-        this.messageInput = this.page.getByText(text, { exact: true });
-        return this.messageInput;
+        return this.page.locator('div[class*="agent-item"]').filter({ hasText: name });
     }
 
-    // 等到AI模块渲染完成
+    // 灵活查找员工:支持精确匹配或带编号后缀的匹配
+    private findAgentByName(name: string): Locator {
+        return this.page.locator('div').filter({
+            has: this.page.getByRole('heading', { name: new RegExp(`^${name}(\\(\\d+\\))?$`), exact: false })
+        }).first();
+    }
+
+    // 等待页面加载完成
     async waitForReady(): Promise<void> {
-        //  页面路径正确（防止误页）
         await expect(this.page).toHaveURL(/\/aichat/);
-        //  左侧员工列表已渲染
-        await expect(this.page.getByText('加载中')).not.toBeVisible();
+        await expect(this.agentList).toBeVisible();
     }
 
-    // pages/agent.page.ts
+    // 等待员工列表稳定
     async waitForAgentListReady(): Promise<void> {
         // 等侧边栏本身出现
-        await expect(this.agentList).toBeVisible();
+        await expect(this.agentList).toBeVisible({ timeout: 30000 });
+        await expect(this.addAgentListButton).toBeVisible({ timeout: 30000 });
 
-        // 再等至少有一个员工项出现（说明列表数据加载完了）
-        await expect(
-            this.agentItemByName('列表加载完成-勿删')
-        ).toBeVisible();
-    }
-    async waitForReply() {
-        // 如果系统有“生成中 → 终止”状态，先等它出现（可选但稳）
-        if (await this.stopButton.count()) {
-            await expect(this.stopButton).toBeVisible({ timeout: 5000 });
-        }
-
-        // 生成完成：发送按钮重新可见
-        try {
-            await expect(this.sendButton).toBeVisible({ timeout: 30000 });
-        } catch {
-            console.warn('[waitForReply] AI response slow, skip waiting for completion');
-
-        }
-
+        // 不要依赖固定“锚点员工”（不同环境可能没有该员工）。
+        // 用更通用的信号判断：加载中消失 + 搜索框可用。
+        await expect(this.agentList.getByText('加载中')).toHaveCount(0, { timeout: 30000 });
+        await expect(this.agentList.getByRole('textbox').first()).toBeVisible({ timeout: 30000 });
     }
 
-
-    // 验证智能体是否可用
+    // 确保员工可用 (自愈模式)
     async ensureAgentAvailable(name: string): Promise<void> {
         await this.waitForAgentListReady();
 
-        const count = await this.agentItemByName(name).count();
+        // 使用灵活匹配检查员工是否存在(支持带编号后缀)
+        const agent = this.findAgentByName(name);
+        const count = await agent.count();
+
         if (count === 0) {
-            throw new Error(
-                `Preset agent "${name}" not found. Please check environment configuration.`
-            );
+            console.log(`[Self-Healing] Agent "${name}" not found. Attempting to add it...`);
+            await this.addAgent(name);
+            // 添加后再次确认等待出现
+            await expect(this.findAgentByName(name)).toBeVisible();
         }
     }
 
+    // 添加员工逻辑
     async addAgent(name: string): Promise<void> {
         await this.waitForReady();
+        console.log(`[addAgent] Attempting to add: "${name}"`);
+        const dialog = this.page.getByRole('dialog', { name: '添加AI员工' });
+
         await this.addAgentListButton.click();
-        await expect(this.searchBox).toBeVisible();
-        await this.searchBox.click();
-        await this.searchBox.fill(name);
-        // await this.searchBox.press('CapsLock');
-        await expect(this.searchResult).toBeVisible();
-        await this.addAgentButton.click();
+        await expect(dialog).toBeVisible();
+        console.log(`[addAgent] Dialog visible`);
+
+        const searchInput = dialog.getByRole('textbox', { name: '输入AI员工名称查询' });
+        await searchInput.click();
+        await searchInput.clear();
+        await searchInput.fill(name);
+        console.log(`[addAgent] Search filled with: "${name}"`);
+
+        // 等待特定的搜索结果出现，并将其作为容器
+        // 使用更精确的定位器过滤
+        const agentCard = dialog.locator('div.flex').filter({
+            has: this.page.getByRole('heading', { name: name, exact: true })
+        }).first();
+
+        console.log(`[addAgent] Waiting for agent card to be visible...`);
+        await expect(agentCard).toBeVisible();
+        console.log(`[addAgent] Agent card found`);
+
+        const addButton = agentCard.getByRole('button', { name: '添加员工' });
+        await expect(addButton).toBeVisible();
+
+        console.log(`[addAgent] Clicking '添加员工' button...`);
+        await addButton.click({ force: true });
+
+        // 验证侧边栏出现该员工 (添加后直接检查列表)
+        const addedAgent = this.findAgentByName(name);
+        await expect(addedAgent).toBeVisible();
+
+        if (await dialog.isVisible().catch(() => false)) {
+            await this.page.keyboard.press('Escape').catch(() => { });
+            await expect(dialog).toBeHidden();
+        }
+
+        console.log(`[addAgent] Agent "${name}" added successfully`);
     };
 
-
-
-    // 选择员工 进入会话
+    // 选择员工进入会话
     async selectAgent(name: string): Promise<void> {
-        await this.waitForReady();
-        const agent = this.agentItemByName(name);
-        await expect(agent).toBeVisible();
-        await agent.click();
-    };
+        const item = this.findAgentByName(name);
+        await item.click();
+        await expect(this.messageInput).toBeVisible();
+    }
 
-    async sendMessage(text: string) {
-        const messageInput = this.messageByAgent('请分析/处理以下文档或需求： ，请重点关注 ，并生成 。')
-        await expect(this.sendButton).toBeVisible();
+    // 发送消息
+    async sendMessage(text: string): Promise<void> {
+        await expect(this.messageInput).toBeVisible();
         await this.messageInput.fill(text);
-        await this.sendButton.click();
+        await expect(this.sendButton).toBeVisible();
+        await this.sendButton.click({ force: true });
+
+        // Best-effort: some agents are template-based and won't show "终止"
+        await expect(this.stopButton).toBeVisible({ timeout: 5000 }).catch(() => { });
     }
 
-
-    async newChat() {
+    // 新建会话
+    async newChat(): Promise<void> {
         await expect(this.newChatButton).toBeVisible();
-        await this.newChatButton.click();
-        await expect(this.page.getByRole('heading', { name: '💡 使用 tips:' })).toBeVisible();
+        await this.newChatButton.click({ force: true });
+        await expect(this.messageInput).toBeVisible();
     }
 
-    async chatInput() { };
-    async messageList() { };
-    async lastMessage() { };
+    // 管理菜单操作
+    private async openAgentMenu(name: string): Promise<void> {
+        const item = this.findAgentByName(name);
+        await item.hover();
+        const menuBtn = item.locator('.anticon-more, button').last();
+        await menuBtn.click({ force: true });
+    }
 
-    conversationItem(title: string): Locator {
-        return this.page.getByText(title, { exact: true });
+    async renameAgent({ name, newName }: { name: string; newName: string }): Promise<void> {
+        await this.openAgentMenu(name);
+        await this.page.getByText('重命名').click();
+        const input = this.page.locator(`input[value="${name}"]`);
+        await input.fill(newName);
+        await input.press('Enter');
+        await expect(this.agentItemByName(newName)).toBeVisible();
+    }
+
+    async togglePinAgent(name: string, shouldPin: boolean): Promise<void> {
+        await this.openAgentMenu(name);
+        const text = shouldPin ? /置顶/ : /取消置顶/;
+        await this.page.getByText(text).first().click();
+    }
+
+    async clearAgentChatHistory(name: string): Promise<void> {
+        await this.openAgentMenu(name);
+        await this.page.getByText(/清空|清除/).click();
+        await this.page.getByRole('button', { name: /确 定|确认/ }).click();
+    }
+
+    async deleteAgent(name: string): Promise<void> {
+        await this.openAgentMenu(name);
+        await this.page.getByText(/删除/).click();
+        await this.page.getByRole('button', { name: /确 定|确认/ }).click();
+        await expect(this.findAgentByName(name)).not.toBeVisible();
+    }
+
+    // 工具方法
+    async getAllAgentNames(): Promise<string[]> {
+        await this.waitForAgentListReady();
+        const headings = await this.page.locator('div[class*="agent-item"] h5, p.font-medium').allTextContents();
+        return headings.map(h => h.trim()).filter(h => h && h !== '已加载全部');
+    }
+
+    async deleteAllAgentsExcept(excludeNames: string[]): Promise<void> {
+        let attempts = 0;
+        const maxAttempts = 50;
+        while (attempts < maxAttempts) {
+            const names = await this.getAllAgentNames();
+            const toDelete = names.filter(n => !excludeNames.some(ex => n.includes(ex)));
+            if (toDelete.length === 0) break;
+            for (const name of toDelete) {
+                await this.deleteAgent(name);
+            }
+            attempts++;
+        }
     }
 
     async clickHistoryTab(): Promise<void> {
-        await expect(this.historyTab).toBeVisible();
-        await this.historyTab.click();
-        // Wait for history list title to appear to ensure we are in history view
-        await expect(this.historyListLocator.first()).toBeVisible();
+        await this.page.getByText('历史记录', { exact: true }).click();
     }
 
     async openConversation(title: string): Promise<void> {
-        const item = this.conversationItem(title);
-        await expect(item).toBeVisible();
-        await item.click();
-        // Wait for the conversation to be active or some indicator? 
-        // For now, let's assume clicking is enough, but in a real app check for active state.
+        await this.page.getByText(title).first().click();
     }
 }

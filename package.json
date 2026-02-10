@@ -5,8 +5,19 @@
   "main": "index.js",
   "scripts": {
     "test:ui": "npx playwright test",
-    "test:ui:test": "BASE_URL=https://test-base-platform.insight-aigc.com npx playwright test",
-    "test:ui:staging": "BASE_URL=https://base-platform.insight-aigc.com npx playwright test"
+    "ui": "npx playwright test --ui",
+    "ui:test": "node scripts/pw-run.js --env test -- --ui",
+    "ui:prod": "node scripts/pw-run.js --env prod -- --ui",
+    "ui:prod:refresh": "node scripts/pw-run.js --env prod --refresh -- --ui",
+    "test:ui:test": "node scripts/pw-run.js --env test",
+    "test:ui:prod": "node scripts/pw-run.js --env prod",
+    "test:ui:staging": "npm run test:ui:prod",
+    "test:ui:test:testUser": "node scripts/pw-run.js --env test --user testUser",
+    "test:ui:prod:prodUser": "node scripts/pw-run.js --env prod --user prodUser",
+    "test:ui:prod:refresh": "node scripts/pw-run.js --env prod --refresh",
+    "test:batch": "npx playwright test tests/smoke/agent.spec.ts -g \"send Message\" --workers 1 --project=chromium",
+    "test:batch:prod": "node scripts/pw-run.js --env prod -- tests/smoke/agent.spec.ts -g \"send Message\" --workers 1 --project=chromium",
+    "report:batch": "node utils/generate-screenshot-report.js"
   },
   "keywords": [],
   "author": "",

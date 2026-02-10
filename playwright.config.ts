@@ -1,4 +1,66 @@
 import { defineConfig, devices } from '@playwright/test';
+import * as fs from 'fs';
+import * as path from 'path';
+import * as dotenv from 'dotenv';
+
+// Load .env (optional)
+// - Default: .env in repo root
+// - Override via ENV_FILE, e.g. ENV_FILE=.env.prod
+const envFile = process.env.ENV_FILE || '.env';
+const envPath = path.resolve(__dirname, envFile);
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+}
+
+function resolveBaseURL(): string {
+  if (process.env.BASE_URL) return process.env.BASE_URL;
+
+  const env = (process.env.PW_ENV || 'test').toLowerCase();
+  if (env === 'prod' || env === 'production' || env === '正式' || env === 'release') {
+    return 'https://base-platform.insight-aigc.com';
+  }
+  return 'https://test-base-platform.insight-aigc.com';
+}
+
+function defaultAuthUserForBaseURL(url: string): 'testUser' | 'prodUser' {
+  try {
+    const host = new URL(url).host;
+    return host.startsWith('test-') ? 'testUser' : 'prodUser';
+  } catch {
+    return 'testUser';
+  }
+}
+
+function normalizeAuthUser(value: string | undefined, baseURLForDefault: string): string {
+  const raw = (value || '').trim();
+  if (!raw) return defaultAuthUserForBaseURL(baseURLForDefault);
+
+  const lowered = raw.toLowerCase();
+
+  // Backward-compatible aliases
+  if (lowered === 'vip' || lowered === 'vipuser') return 'testUser';
+  if (lowered === 'normal' || lowered === 'normaluser') return 'prodUser';
+
+  // New canonical values
+  if (lowered === 'test' || lowered === 'testuser') return 'testUser';
+  if (lowered === 'prod' || lowered === 'produser') return 'prodUser';
+
+  return raw;
+}
+
+function safeHostForFileName(baseURL: string): string {
+  try {
+    return new URL(baseURL).host.replace(/[:]/g, '_');
+  } catch {
+    return baseURL.replace(/^https?:\/\//i, '').replace(/[^a-z0-9._-]/gi, '_');
+  }
+}
+
+const baseURL = resolveBaseURL();
+const authUser = normalizeAuthUser(process.env.PW_USER, baseURL);
+const storageStatePath =
+  process.env.STORAGE_STATE ||
+  path.join('playwright', '.auth', `state.${safeHostForFileName(baseURL)}.${authUser}.json`);
 
 /**
  * Read environment variables from file.
@@ -15,6 +77,9 @@ export default defineConfig({
 
   globalSetup: require.resolve('./auth/global-setup'),
   testDir: './tests',
+  expect: {
+    timeout: 15000,
+  },
   /* Run tests in files in parallel */
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -31,10 +96,12 @@ export default defineConfig({
     // baseURL: 'http://localhost:3000',
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    baseURL: process.env.BASE_URL || 'https://test-base-platform.insight-aigc.com',
+    // Priority: BASE_URL > PW_ENV mapping (test/prod)
+    baseURL,
     headless: false,
     trace: 'on-first-retry',
-    storageState: 'auth/state.json',
+    // Per-env & per-user storageState (avoids mixing test/prod cookies)
+    storageState: storageStatePath,
   },
 
   /* Configure projects for major browsers */

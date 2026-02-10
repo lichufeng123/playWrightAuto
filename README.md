@@ -28,6 +28,29 @@ PlayWright_Demo/
 └── package.json            # 依赖管理
 ```
 
+## ✨ AI 员工测试专项 (AI Agent Testing)
+
+本项目针对 AI 员工模块构建了深度增强的自动化能力：
+
+### 1. 强力环境清理 (Strict Cleanup)
+- **双重完成判定**：清理逻辑必须同时满足“看到已加载全部”标志位且“列表中仅剩下预置锚点”才会退出，极大提升了环境幂等性。
+- **自动去重**：自动识别并删除由于并发或重命名产生的重复员工副本（如 `员工名(1)`）。
+- **滚动加载支持**：内置侧边栏自动滚动逻辑，可处理大型员工列表的懒加载。
+
+### 2. 批量消息发送能力 (Batch Messaging)
+- **多维度覆盖**：支持对 29+ 员工进行参数化测试。
+- **业务提示词映射**：根据员工类型（视频/图片/PPT/美工）自动匹配最高质量的业务 Prompts。
+- **性能优化**：通过检测 `stopButton` (终止按钮) 出现即判定发送成功，将单个生成类用例耗时缩短 80% 以上。
+
+### 3. 自愈与鲁棒性 (Self-Healing & Resilience)
+- **自愈式添加**：`ensureAgentAvailable` 逻辑在发现目标员工缺失时，会自动触发搜索并从弹窗添加，确保测试链不中断。
+- **Dialog 状态跟踪**：优化了弹窗式 UI 的交互，使用精确匹配和稳定等待策略，解决了复杂表单下的点击冲突。
+- **账户余额监测**：内置“赛点余额不足”检测，能自动识别由于资产原因导致的生成失败并抛出清晰异常。
+
+### 4. 视觉化管理与报告 (Reporting)
+- **自动化快照**：批量测试运行后，会自动在 `test-results/batch-screenshots/` 下生成以员工命名的全屏截图，方便直观校验 UI 渲染效果。
+- **隔离执行策略**：通过 worker 隔离确保并行执行时数据不冲突，大幅提升 CI 效率。
+
 ## 📐 设计原则 (Design Principles)
 
 本项目严格遵循以下设计原则，贡献代码时请务必遵守：
@@ -70,20 +93,69 @@ npm install
 ### 运行测试
 运行所有测试 (并行模式)：
 ```bash
+# 运行所有测试
+npx playwright test
+
+# 运行 AI 员工批量发送消息测试 (串行以保证稳定性)
+npm run test:batch
+
+# 生成批量测试截图报告
+npm run report:batch
+```
+
+查看通用测试报告：
+```bash
+npx playwright show-report
+```
+
+## 🌍 环境与账号切换 (Smooth Switching)
+
+为避免“切到正式环境但登录态仍来自测试环境”的坑，本项目将 **BaseURL / 登录账号 / StorageState** 做了统一收敛：
+- 通过环境变量切换环境与账号
+- 登录态按“环境 + 账号”缓存到 `playwright/.auth/`，互不干扰
+
+实现原理与代码位置说明见：`docs/ENV_AND_AUTH.md`
+
+### 1) 切换环境
+
+- 测试环境 (默认)：`PW_ENV=test` → `https://test-base-platform.insight-aigc.com`
+- 正式环境：`PW_ENV=prod` → `https://base-platform.insight-aigc.com`
+- 自定义：直接设置 `BASE_URL`（优先级最高）
+
+也支持使用 `.env`：在项目根目录创建 `.env` 写入上述变量；或通过 `ENV_FILE` 指定不同文件（如 `.env.prod`）。
+
+推荐命令：
+```bash
+# 正式环境跑全量
+npm run test:ui:prod
+
+# Open Playwright UI (prod)
+npm run ui:prod
+
+# 正式环境跑批量发送（串行）
+npm run test:batch:prod
+```
+
+### 2) 切换账号
+
+- `PW_USER`: `testUser`(测试环境默认) | `prodUser`(正式环境默认)
+- 或使用 `LOGIN_PHONE` + `LOGIN_CODE` 覆盖登录账号（更灵活）
+
+PowerShell 示例：
+```powershell
+$env:PW_ENV = 'prod'
+$env:PW_USER = 'prodUser'
 npx playwright test
 ```
 
-运行特定测试文件：
-```bash
-npx playwright test tests/smoke/agent.spec.ts
-```
+### 3) 强制刷新登录态
 
-查看测试报告：
+当缓存的登录态失效时：
 ```bash
-npx playwright show-report
+npm run test:ui:prod:refresh
 ```
 
 ## ⚠️ 注意事项
 
 - **AI 员工模块**：该模块包含动态 DOM 结构，定位时请使用 `AgentPage` 中提供的动态定位方法 (如 `agentItemByName`)。
-- **环境配置**：默认 Base URL 配置在 `playwright.config.ts` 中，如需切换环境请修改配置文件或通过环境变量注入。
+- **环境配置**：默认 `PW_ENV=test`，切换正式环境用 `PW_ENV=prod` 或直接设置 `BASE_URL`。

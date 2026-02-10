@@ -1,13 +1,13 @@
 export const validLoginData = {
-    normalUser:{
+    prodUser:{
         phone: '13266034775',
         code: '1234',
-        description: '普通用户正常登录',
+        description: '正式环境账号 (prodUser)',
         },
-    vipUser:{
+    testUser:{
         phone: '13172865299',
         code: '1234',
-        description: 'VIP 用户登录',
+        description: '测试环境账号 (testUser)',
         }
     }
 
