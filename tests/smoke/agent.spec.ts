@@ -187,6 +187,55 @@ test('管理：删除并重新添加员工', async ({ page }) => {
     await agentPage.addAgent(name)
 })
 
+test.describe('图片类生成用例', () => {
+    const IMAGE_AGENTS = [
+        {
+            name: '电商美工设计师',
+            prompt: '我需要为【无线键盘】制作两张场景图，使用场景设定为【居家办公】。需要突出产品的【舒适手感与效率感】，人物出镜【不需要模特】，期望风格是【明亮温馨】，其他要求是【环境简洁不抢主体】。',
+        },
+        {
+            name: '设计师小香蕉',
+            prompt: '我需要为【无线键盘】制作两张场景图，使用场景设定为【居家办公】。需要突出产品的【舒适手感与效率感】，人物出镜【不需要模特】，期望风格是【明亮温馨】，其他要求是【环境简洁不抢主体】。',
+        },
+        {
+            name: '图片生成-MJ',
+            prompt: '我需要生成二张【插画】风格的图片。主题是【一位年轻人坐在咖啡馆窗边阅读，窗外是城市街景】。整体风格偏向【温暖插画风】，需要避免出现【文字】。',
+        },
+        {
+            name: '图片生成-即梦',
+            prompt: '我需要生成二张【插画】风格的图片。主题是【一位年轻人坐在咖啡馆窗边阅读，窗外是城市街景】。整体风格偏向【温暖插画风】，需要避免出现【文字】。',
+        },
+        {
+            name: '图片生成-星流',
+            prompt: '我需要生成二张【插画】风格的图片。主题是【一位年轻人坐在咖啡馆窗边阅读，窗外是城市街景】。整体风格偏向【温暖插画风】，需要避免出现【文字】。',
+        },
+    ]
+
+    test('图片生成员工统一选择4张并发送提示语', async ({ page }) => {
+        test.setTimeout(180000)
+        const agentPage = await enterAgentPage(page)
+
+        for (const { name, prompt } of IMAGE_AGENTS) {
+            await agentPage.ensureAgentAvailable(name)
+            await agentPage.selectAgent(name)
+            await agentPage.newChat()
+
+            await page.waitForTimeout(3000)
+
+            const combo = page.getByRole('combobox').nth(1)
+            await expect(combo).toBeVisible()
+            await combo.click()
+            await page.keyboard.press('ArrowDown')
+            await page.keyboard.press('ArrowDown')
+            await page.keyboard.press('ArrowDown')
+            await page.keyboard.press('Enter')
+
+            await agentPage.sendMessage(prompt)
+            await page.waitForTimeout(3000)
+        }
+    })
+})
+
 test('清理：删除所有员工(保留特殊锚点)', async ({ page }) => {
     test.setTimeout(300000)
     const agentPage = await enterAgentPage(page)
