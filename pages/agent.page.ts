@@ -31,14 +31,15 @@ export class AgentPage {
 
     // 获取特定名称的员工列项
     agentItemByName(name: string): Locator {
-        return this.page.locator('div[class*="agent-item"]').filter({ hasText: name });
+        return this.findAgentByName(name);
     }
 
     // 灵活查找员工:支持精确匹配或带编号后缀的匹配
     private findAgentByName(name: string): Locator {
-        return this.page.locator('div').filter({
-            has: this.page.getByRole('heading', { name: new RegExp(`^${name}(\\(\\d+\\))?$`), exact: false })
-        }).first();
+        const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const pattern = new RegExp(`${escaped}(\\s*\\(\\d+\\))?$`, 'i');
+        const nameCell = this.agentList.locator('p, h5', { hasText: pattern }).first();
+        return nameCell.locator('xpath=ancestor::div[.//button][1]');
     }
 
     // 等待页面加载完成
@@ -147,8 +148,10 @@ export class AgentPage {
     // 管理菜单操作
     private async openAgentMenu(name: string): Promise<void> {
         const item = this.findAgentByName(name);
-        await item.hover();
-        const menuBtn = item.locator('.anticon-more, button').last();
+        await expect(item).toBeVisible({ timeout: 15000 });
+
+        // 部分环境只有一个“更多”按钮，直接取最后一个按钮做兜底
+        const menuBtn = item.getByRole('button').last();
         await menuBtn.click({ force: true });
     }
 
@@ -175,7 +178,7 @@ export class AgentPage {
 
     async deleteAgent(name: string): Promise<void> {
         await this.openAgentMenu(name);
-        await this.page.getByText(/删除/).click();
+        await this.page.getByRole('menuitem', { name: /删除/ }).first().click();
         await this.page.getByRole('button', { name: /确 定|确认/ }).click();
         await expect(this.findAgentByName(name)).not.toBeVisible();
     }
@@ -183,7 +186,7 @@ export class AgentPage {
     // 工具方法
     async getAllAgentNames(): Promise<string[]> {
         await this.waitForAgentListReady();
-        const headings = await this.page.locator('div[class*="agent-item"] h5, p.font-medium').allTextContents();
+        const headings = await this.agentList.locator('p.font-medium').allTextContents();
         return headings.map(h => h.trim()).filter(h => h && h !== '已加载全部');
     }
 
