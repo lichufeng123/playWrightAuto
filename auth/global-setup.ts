@@ -74,7 +74,7 @@ async function globalSetup(config: FullConfig) {
   const envName = (process.env.PW_ENV || 'test').toLowerCase();
 
   const storageStateAbsPath = path.resolve(storageStatePath);
-  const shouldRefresh =
+  let shouldRefresh =
     process.env.PW_REFRESH_STATE === '1' || process.env.PW_REFRESH_STATE === 'true';
 
   console.log(
@@ -84,10 +84,23 @@ async function globalSetup(config: FullConfig) {
   );
 
   if (!shouldRefresh && fs.existsSync(storageStateAbsPath)) {
-    console.log(
-      `[globalSetup] Reuse storageState: ${storageStatePath} (set PW_REFRESH_STATE=1 to re-login)`
-    );
-    return;
+    // 快速校验存量登录态是否仍然有效；无效则触发刷新
+    const browser = await chromium.launch();
+    const context = await browser.newContext({ baseURL, storageState: storageStatePath });
+    const page = await context.newPage();
+    await page.goto('/aichat', { waitUntil: 'networkidle' });
+    const atLogin = page.url().includes('/login');
+    await browser.close();
+
+    if (!atLogin) {
+      console.log(
+        `[globalSetup] Reuse storageState: ${storageStatePath} (set PW_REFRESH_STATE=1 to re-login)`
+      );
+      return;
+    }
+
+    console.log('[globalSetup] StorageState invalid, re-login required');
+    shouldRefresh = true;
   }
 
   console.log('[globalSetup] Logging in...');
@@ -103,7 +116,8 @@ async function globalSetup(config: FullConfig) {
   await loginPage.open();
   await loginPage.loginWith(resolveLoginData(authUser));
 
-  // 等登录成功（非常重要）
+  // 确认业务页可访问，避免登录后仍停留在登录页
+  await page.goto('/aichat', { waitUntil: 'networkidle' });
   await page.waitForURL(url => !url.pathname.includes('/login'));
 
   // 保存登录态

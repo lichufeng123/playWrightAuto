@@ -31,6 +31,7 @@ export class LoginPage {
         ]);
     await this.codeInput.fill(data.code);
     await this.loginButton.click();
+    await this.page.waitForURL(url => !url.pathname.includes('/login'));
   }
 
   async isLoginSuccess(): Promise<boolean> {

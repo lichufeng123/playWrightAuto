@@ -3,7 +3,7 @@ import { AgentPage } from '../../pages/agent.page'
 import { enterAgentPage } from '../helpers/navigation'
 import { HomePage } from '../../pages/home.page'
 import { SqueezePage } from '../../pages/squeeze.page'
-import { AGENTS, MESSAGE_TEST_AGENTS } from '../data/agents'
+import { AGENTS, MESSAGE_TEST_AGENTS, Note_MESSAGE_TEST_AGENTS } from '../data/agents'
 import { collectPageContext } from '../../skills/page_context_collect'
 
 test.afterEach(async ({ page }, testInfo) => {
@@ -218,21 +218,42 @@ test.describe('图片类生成用例', () => {
         for (const { name, prompt } of IMAGE_AGENTS) {
             await agentPage.ensureAgentAvailable(name)
             await agentPage.selectAgent(name)
-            await agentPage.newChat()
-
             await page.waitForTimeout(3000)
 
-            const combo = page.getByRole('combobox').nth(1)
+            const combo = page.getByRole('combobox').filter({ hasText: /张/ }).first()
             await expect(combo).toBeVisible()
             await combo.click()
-            await page.keyboard.press('ArrowDown')
-            await page.keyboard.press('ArrowDown')
-            await page.keyboard.press('ArrowDown')
-            await page.keyboard.press('Enter')
+            const option4 = page.getByRole('option', { name: /4张/ }).first()
+            if (await option4.count()) {
+                await option4.click()
+            } else {
+                const option2 = page.getByRole('option', { name: /2张/ }).first()
+                await option2.click()
+            }
 
             await agentPage.sendMessage(prompt)
             await page.waitForTimeout(3000)
         }
+    })
+})
+
+test.describe('Note messaging', () => {
+    test.describe.configure({ mode: 'serial' });
+    const perTestTimeoutMs = Number(process.env.PW_BATCH_TEST_TIMEOUT_MS || '180000');
+
+    Note_MESSAGE_TEST_AGENTS.forEach(name => {
+        test(`Note send: ${name}`, async ({ page }) => {
+            test.setTimeout(perTestTimeoutMs);
+            const agentPage = await enterAgentPage(page)
+
+            await agentPage.ensureAgentAvailable(name)
+            await expect(agentPage.agentItemByName(name)).toBeVisible()
+            await agentPage.selectAgent(name)
+
+            await page.waitForTimeout(3000)
+            await agentPage.sendMessage('确认')
+            await page.waitForTimeout(3000)
+        })
     })
 })
 
