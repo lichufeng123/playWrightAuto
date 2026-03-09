@@ -5,6 +5,7 @@ export class LoginPage {
   readonly phoneInput: Locator;
   readonly codeButton: Locator;
   readonly codeInput: Locator;
+  readonly checkButton: Locator;
   readonly loginButton: Locator;
   readonly errorMessage: Locator;
 
@@ -12,7 +13,8 @@ export class LoginPage {
     this.page = page;
     this.phoneInput = page.getByRole('textbox', { name: '请输入手机号' });
     this.codeButton = page.getByText('获取验证码')
-    this.codeInput = page.getByRole('textbox', { name: '验证码' });
+    this.codeInput = page.getByRole('textbox', { name: '分钟内有效，请勿告诉他人' })
+    this.checkButton = page.locator('[id="_r_3_-form-item"]');
     this.loginButton = page.getByRole('button', { name: '登录' });
     this.errorMessage = page.getByText('请输入正确的验证码');
   }
@@ -30,6 +32,7 @@ export class LoginPage {
         this.codeButton.click(),
         ]);
     await this.codeInput.fill(data.code);
+    await this.checkButton.click();
     await this.loginButton.click();
     await this.page.waitForURL(url => !url.pathname.includes('/login'));
   }

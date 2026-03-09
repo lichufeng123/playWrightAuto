@@ -4,10 +4,14 @@ export class AgentPage {
     readonly page: Page;
     readonly agentList: Locator;
     readonly addAgentListButton: Locator;
-    readonly messageInput: Locator;
+    readonly messageInput: Locator; // legacy alias
+    readonly chatInput: Locator;
     readonly sendButton: Locator;
     readonly stopButton: Locator;
     readonly newChatButton: Locator;
+    readonly messageList: Locator;
+    readonly lastMessage: Locator;
+    private readonly streamUrlPattern = /\/game-ai-editor-center\/chat\/ai-employee\/v1/;
 
     constructor(page: Page) {
         this.page = page;
@@ -20,13 +24,17 @@ export class AgentPage {
         const main = page.getByRole('main');
 
         // 消息输入框
-        this.messageInput = main.getByRole('textbox').first();
+        this.chatInput = main.getByRole('textbox').first();
+        this.messageInput = this.chatInput;
         // 发送按钮
         this.sendButton = main.getByRole('button', { name: /发送/ }).first();
         // 停止按钮 (正在生成态，部分员工不会出现)
         this.stopButton = main.getByRole('button', { name: /终止/ }).first();
         // 新建会话按钮（有些版本不是 button）
         this.newChatButton = main.getByText(/新建(对话|会话)/, { exact: true }).first();
+        // 聊天消息区域（使用较宽的选择器，适配不同实现）
+        this.messageList = main.locator('[data-message-id], [data-testid*="message"], [class*="message"]');
+        this.lastMessage = this.messageList.last();
     }
 
     // 获取特定名称的员工列项
@@ -46,6 +54,13 @@ export class AgentPage {
     async waitForReady(): Promise<void> {
         await expect(this.page).toHaveURL(/\/aichat/);
         await expect(this.agentList).toBeVisible();
+    }
+
+    // 等聊天区域可用：输入框可编辑、发送按钮可点击
+    async waitForChatReady(): Promise<void> {
+        await expect(this.sendButton).toBeVisible({ timeout: 30000 });
+        await expect(this.sendButton).toBeEnabled({ timeout: 30000 });
+        await expect(this.chatInput).toBeEditable({ timeout: 30000 });
     }
 
     // 等待员工列表稳定
@@ -74,6 +89,68 @@ export class AgentPage {
             // 添加后再次确认等待出现
             await expect(this.findAgentByName(name)).toBeVisible();
         }
+    }
+
+    // 发送消息（不包含等待回复结束）
+    async sendMessage(text: string): Promise<void> {
+        await this.waitForChatReady();
+        await this.chatInput.fill('');
+        await this.chatInput.fill(text);
+        await expect(this.sendButton).toBeEnabled({ timeout: 10000 });
+        await Promise.all([
+            this.waitForReplyStarted({ timeout: 15000 }).catch(() => {}),
+            this.sendButton.click()
+        ]);
+    }
+
+    // 多轮对话发送：适用于上一轮回复后发送按钮暂不可用的场景，先输入再校验可用
+    async sendMessageInOngoingChat(text: string): Promise<void> {
+        await expect(this.sendButton).toBeVisible({ timeout: 30000 });
+        await expect(this.chatInput).toBeEditable({ timeout: 30000 });
+        await this.chatInput.fill('');
+        await this.chatInput.fill(text);
+        await expect(this.sendButton).toBeEnabled({ timeout: 10000 });
+        await Promise.all([
+            this.waitForReplyStarted({ timeout: 15000 }).catch(() => {}),
+            this.sendButton.click()
+        ]);
+    }
+
+    // 等回复开始：仅依赖流式请求发起
+    async waitForReplyStarted(opts?: { timeout?: number }): Promise<void> {
+        const timeout = opts?.timeout ?? 15000;
+        await this.page.waitForResponse(
+            res => this.streamUrlPattern.test(res.url()) && res.request().method() === 'POST',
+            { timeout }
+        );
+    }
+
+    // 等回复完成：终止按钮恢复为发送按钮
+    async waitForReplyFinished(opts?: { timeout?: number }): Promise<void> {
+        const timeout = opts?.timeout ?? 60000;
+        const start = Date.now();
+        const remaining = () => Math.max(500, timeout - (Date.now() - start));
+
+        // 等“终止”出现（如果存在终止态）
+        await this.stopButton.waitFor({ state: 'visible', timeout: remaining() }).catch(() => {});
+        // 等待回复结束信号：终止消失 + 发送按钮恢复，若发送按钮状态异常则退化为输入框可编辑
+        await this.stopButton.waitFor({ state: 'hidden', timeout: remaining() }).catch(() => {});
+        await this.sendButton.waitFor({ state: 'visible', timeout: remaining() }).catch(() => {});
+        try {
+            await expect(this.sendButton).toBeEnabled({ timeout: remaining() });
+        } catch {
+            await expect(this.chatInput).toBeEditable({ timeout: remaining() });
+        }
+    }
+
+    // 发送并等待回复完成
+    async sendAndWaitReply(text: string, opts?: { timeout?: number; ensureMessageStable?: boolean }): Promise<void> {
+        await this.sendMessage(text);
+        await this.waitForReplyFinished(opts);
+    }
+
+    async getLastMessageText(): Promise<string> {
+        return (await this.lastMessage.textContent().catch(() => ''))?.trim() ?? '';
     }
 
     // 添加员工逻辑
@@ -125,17 +202,6 @@ export class AgentPage {
         const item = this.findAgentByName(name);
         await item.click();
         await expect(this.messageInput).toBeVisible();
-    }
-
-    // 发送消息
-    async sendMessage(text: string): Promise<void> {
-        await expect(this.messageInput).toBeVisible();
-        await this.messageInput.fill(text);
-        await expect(this.sendButton).toBeVisible();
-        await this.sendButton.click({ force: true });
-
-        // Best-effort: some agents are template-based and won't show "终止"
-        await expect(this.stopButton).toBeVisible({ timeout: 5000 }).catch(() => { });
     }
 
     // 新建会话

@@ -1,0 +1,35 @@
+{
+    "agentId": "26",
+    "agentImage": "https://game-ai-editor-videoassets-test.oss-cn-guangzhou.aliyuncs.com/user_in/7190781f-7d4f-4d5e-8ee0-a2464c49ce11.png",
+    "agentName": "图片生成-星流",
+    "choices": [
+        {
+            "delta": {
+                "attachments": [
+                    {
+                        "type": "image",
+                        "url": "https://game-ai-editor-videoassets-test.oss-cn-guangzhou.aliyuncs.com/dfa75acf-09f8-4733-b9e4-f75532ac18fc.png/2c076853bcc0508f182e6be90db0b223.png"
+                    }
+                ],
+                "content": ""
+            }
+        }
+    ],
+    "contentType": "text",
+    "conversationId": "2473",
+    "created": 1772700581,
+    "done": false,
+    "messageId": "421a90eb-5667-4eec-ae75-fd5c92eb77d2",
+    "messageOrder": 5,
+    "toolsSignalList": [
+        {
+            "mediaType": "images",
+            "numbers": 1,
+            "progress": 100,
+            "signalId": "8b95f2cd347d4a23be5c71b017ff763b",
+            "status": "stop",
+            "timestamp": "1772700581503",
+            "toolsName": "create_image"
+        }
+    ]
+}

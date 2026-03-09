@@ -49,12 +49,22 @@ test('smoke: can select preset agent', async ({ page }) => {
 
     await agentPage.ensureAgentAvailable(AGENTS.PUBLIC_READ_ONLY)
     await agentPage.selectAgent(AGENTS.PUBLIC_READ_ONLY)
+    await agentPage.newChat()
+
+    await page.waitForTimeout(3000)
+    await agentPage.sendMessage('确认')
+    await page.waitForTimeout(3000)
 })
 
 test('can select agent ', async ({ page }) => {
     const agentPage = await enterAgentPage(page)
     await agentPage.ensureAgentAvailable(AGENTS.PUBLIC_READ_ONLY)
     await agentPage.selectAgent(AGENTS.PUBLIC_READ_ONLY)
+    await agentPage.newChat()
+
+    await page.waitForTimeout(3000)
+    await agentPage.sendMessage('确认')
+    await page.waitForTimeout(3000)
 })
 
 test('open NewChat', async ({ page }) => {
@@ -106,7 +116,7 @@ test.describe('batch messaging', () => {
                 message = '我需要为【巴黎欧莱雅】进行【品牌主视觉】的美术方向设定。创意概念是【纯净修护】，期望的视觉风格是【自然极简】，主要色彩倾向【浅色系】，希望给受众带来【安心信任】的视觉感受。'
             } else if (name === '文案专员') {
                 message = '我需要为【Airpods pro4】撰写用于【朋友圈广告】的文案。核心需要突出【降噪与续航】，目标是促使目标受众【通勤白领】产生【点击了解】。文案调性需是【简洁有力】，字数限制在【50字】左右。'
-            } else if (name === '创意脚本策划') {
+            } else if (name === '创意脚本策划师') {
                 message = '我需要为【魔爪】策划一个【30秒品牌TVC】的脚本。创意核心概念是【突破自我】，脚本需包含【开场悬念、产品展示、结尾口号】，整体风格偏向【戏剧化】，目标是在【短视频平台】上吸引观众。'
             } else if (name === '创意概念专家') {
                 message = '我需要为【元气森林】的【新年战役】发想创意概念。本次传播的核心信息是【陪伴与团圆】，目标是要引发目标受众【年轻家庭】的【情感共鸣】。期望的创意基调是【温暖感人】。'
@@ -137,6 +147,25 @@ test.describe('batch messaging', () => {
             const safeName = name.replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_')
             await page.screenshot({ path: `test-results/batch-screenshots/${safeName}.png`, fullPage: true })
         })
+    })
+})
+
+test.describe('single reply wait', () => {
+    test('设计专员发送你好并等待回复完成', async ({ page }) => {
+        // SSE 回复较慢，放宽测试超时到 2 分钟
+        test.setTimeout(120000);
+        const agentPage = await enterAgentPage(page)
+
+        await agentPage.ensureAgentAvailable('设计专员')
+        await agentPage.selectAgent('设计专员')
+        await agentPage.newChat()
+        await agentPage.waitForChatReady()
+
+        // 同时放宽等待回复的超时
+        await agentPage.sendAndWaitReply('你好', { timeout: 120000 })
+
+        const lastText = await agentPage.getLastMessageText()
+        await expect.soft(lastText.length > 0).toBeTruthy()
     })
 })
 
@@ -218,6 +247,7 @@ test.describe('图片类生成用例', () => {
         for (const { name, prompt } of IMAGE_AGENTS) {
             await agentPage.ensureAgentAvailable(name)
             await agentPage.selectAgent(name)
+            await agentPage.newChat()
             await page.waitForTimeout(3000)
 
             const combo = page.getByRole('combobox').filter({ hasText: /张/ }).first()
@@ -237,6 +267,42 @@ test.describe('图片类生成用例', () => {
     })
 })
 
+test.describe.parallel('图片生成并发发送', () => {
+    const PARALLEL_IMAGE_AGENTS = [
+        '图片生成-星流',
+        '图片生成-MJ',
+        '图片生成-即梦',
+        '电商美工设计师',
+        '设计师小香蕉',
+    ]
+    const perTestTimeoutMs = Number(process.env.PW_IMAGE_PARALLEL_TIMEOUT_MS || '180000')
+    const prompt = '我需要生成一张【插画】风格的图片。主题是【一位年轻人坐在咖啡馆窗边阅读，窗外是城市街景】。整体风格偏向【温暖插画风】，需要避免出现【文字】。'
+
+    PARALLEL_IMAGE_AGENTS.forEach(name => {
+        test(`并发图片生成: ${name}`, async ({ page }) => {
+            test.setTimeout(perTestTimeoutMs)
+            const agentPage = await enterAgentPage(page)
+
+            await agentPage.ensureAgentAvailable(name)
+            await agentPage.selectAgent(name)
+            await agentPage.newChat()
+            await agentPage.waitForChatReady()
+
+            const combo = page.getByRole('combobox').filter({ hasText: /张/ }).first()
+            if (await combo.count()) {
+                await combo.click()
+                const option1 = page.getByRole('option', { name: /1张/ }).first()
+                if (await option1.count()) {
+                    await option1.click()
+                }
+            }
+
+            await agentPage.sendMessage(prompt)
+            await page.waitForTimeout(3000)
+        })
+    })
+})
+
 test.describe('Note messaging', () => {
     test.describe.configure({ mode: 'serial' });
     const perTestTimeoutMs = Number(process.env.PW_BATCH_TEST_TIMEOUT_MS || '180000');
@@ -249,6 +315,7 @@ test.describe('Note messaging', () => {
             await agentPage.ensureAgentAvailable(name)
             await expect(agentPage.agentItemByName(name)).toBeVisible()
             await agentPage.selectAgent(name)
+            await agentPage.newChat()
 
             await page.waitForTimeout(3000)
             await agentPage.sendMessage('确认')

@@ -2,7 +2,7 @@ import { Page } from '@playwright/test';
 import { HomePage } from '../../pages/home.page';
 import { SqueezePage } from '../../pages/squeeze.page';
 import { AgentPage } from '../../pages/agent.page';
-import { WorkflowPage } from '../../pages/workflow.page';
+import { GroupPage } from '../../pages/group.page';
 
 export async function enterAgentPage(page: Page): Promise<AgentPage> {
   await page.goto('/');
@@ -17,14 +17,14 @@ export async function enterAgentPage(page: Page): Promise<AgentPage> {
   return agentPage;
 }
 
-export async function enterWorkflowPage(page: Page): Promise<WorkflowPage> {
+export async function enterGroupPage(page: Page): Promise<GroupPage> {
   await page.goto('/');
 
   const homePage = new HomePage(page);
   const squeezePage = await homePage.startUse();
 
-  const workflowPage = new WorkflowPage(page);
-  await squeezePage.clickWorkflow();
+  const groupPage = new GroupPage(page);
+  await squeezePage.clickAIGroup();
 
-  return workflowPage;
+  return groupPage;
 }
