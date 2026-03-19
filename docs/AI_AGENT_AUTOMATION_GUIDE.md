@@ -10,7 +10,7 @@
   - `waitForChatReady()`：等待聊天输入框可编辑，发送按钮可见（是否可用由具体用例决定）。
 - **核心定位器**
   - `agentList`：侧栏列表容器；`agentItemByName(name)` 查找特定员工，支持编号后缀。
-  - `chatInput` / `sendButton` / `stopButton`：聊天输入与发送/终止按钮。
+  - `chatInput` / `sendButton` / `stopButton`：聊天输入与发送/终止按钮；当模板缺失导致找不到输入框时，自动回退到 `[contenteditable="true"]` / `textarea` / `input[type="text"]`。
   - `newChatButton`：新建会话入口。
   - `messageList` / `lastMessage`：消息区域定位（用于截图或读取最后消息）。
 - **自愈能力**

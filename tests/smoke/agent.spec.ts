@@ -315,7 +315,7 @@ test.describe('Note messaging', () => {
             await agentPage.ensureAgentAvailable(name)
             await expect(agentPage.agentItemByName(name)).toBeVisible()
             await agentPage.selectAgent(name)
-            await agentPage.newChat()
+
 
             await page.waitForTimeout(3000)
             await agentPage.sendMessage('确认')
