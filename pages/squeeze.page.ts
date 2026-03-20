@@ -38,5 +38,6 @@ export class SqueezePage {
         await this.waitForReady();
         await this.WorkflowTab.click();
         await this.page.waitForLoadState('networkidle');
+        await expect(this.page).toHaveURL(/\/workflow/);
     }
 }

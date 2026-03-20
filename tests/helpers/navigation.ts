@@ -3,6 +3,7 @@ import { HomePage } from '../../pages/home.page';
 import { SqueezePage } from '../../pages/squeeze.page';
 import { AgentPage } from '../../pages/agent.page';
 import { GroupPage } from '../../pages/group.page';
+import { WorkflowPage } from '../../pages/workflow.page';
 
 export async function enterAgentPage(page: Page): Promise<AgentPage> {
   await page.goto('/');
@@ -27,4 +28,17 @@ export async function enterGroupPage(page: Page): Promise<GroupPage> {
   await squeezePage.clickAIGroup();
 
   return groupPage;
+}
+
+export async function enterWorkflowPage(page: Page): Promise<WorkflowPage> {
+  await page.goto('/');
+
+  const homePage = new HomePage(page);
+  const squeezePage = await homePage.startUse();
+
+  const workflowPage = new WorkflowPage(page);
+  await squeezePage.clickWorkflow();
+  await workflowPage.waitForReady();
+
+  return workflowPage;
 }

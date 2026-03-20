@@ -250,3 +250,4 @@
 - [搞了个MissAV/Jable的字幕悬浮球小助手](https://linux.do/t/topic/1703090/1)
 - [今年五一打算跟朋友去云南玩，各位佬友有没有什么建议](https://linux.do/t/topic/1714271/)
 - [下个月去杭州游玩避雷求推荐](https://linux.do/t/topic/1717325/)
+- [【木子狸的扫盲笔记】AI 自顶向下（还没写完）](https://linux.do/t/topic/1770897/5)

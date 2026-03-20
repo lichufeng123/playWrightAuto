@@ -6,10 +6,12 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
+import pytest
 import requests
 
-DATA_FILE = os.path.join(os.path.dirname(__file__), "InputData.json")
-LOG_FILE = os.path.join(os.path.dirname(__file__), "request_log.jsonl")
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+DATA_FILE = os.path.join(os.path.dirname(__file__), "data", "InputData.json")
+DEFAULT_LOG_DIR = os.path.join(BASE_DIR, "test-results", "api")
 DEFAULT_URL = "https://gapi-test.idealead.com/game-ai-editor-center/api/v2/workflow/invoke"
 DEFAULT_TOKEN = (
     "eyJ0eXAiOiJKV1QiLCJraWQiOiJwcml2YXRlLTIwMjUtMDktMDEiLCJhbGciOiJSUzI1NiJ9."
@@ -45,6 +47,22 @@ def build_headers(token: str) -> Dict[str, str]:
     if not token:
         raise ValueError("Missing API token. Set API_TOKEN or edit DEFAULT_TOKEN.")
     return {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
+
+
+def get_log_path() -> str:
+    log_path = os.getenv("LOG_FILE")
+    if log_path:
+        return log_path
+    worker = os.getenv("PYTEST_XDIST_WORKER", "main")
+    return os.path.join(DEFAULT_LOG_DIR, f"request_log_{worker}.jsonl")
+
+
+def write_log(entry: Dict[str, Any], log_path: str) -> None:
+    log_dir = os.path.dirname(log_path)
+    if log_dir:
+        os.makedirs(log_dir, exist_ok=True)
+    with open(log_path, "a", encoding="utf-8") as log_handle:
+        log_handle.write(json.dumps(entry, ensure_ascii=True) + "\n")
 
 
 def post_one(
@@ -102,42 +120,34 @@ def post_one(
     }
 
 
-def main() -> int:
+@pytest.mark.api
+def test_workflow_invoke_concurrent() -> None:
     url = os.getenv("API_URL", DEFAULT_URL)
     token = os.getenv("API_TOKEN", DEFAULT_TOKEN)
-    log_path = os.getenv("LOG_FILE", LOG_FILE)
     concurrency = int(os.getenv("CONCURRENCY", "10"))
     timeout_seconds = float(os.getenv("API_TIMEOUT", "60"))
     timeout = (10.0, timeout_seconds)
 
     payloads = load_payloads(DATA_FILE)
-    if not payloads:
-        print("No payloads found in InputData.json")
-        return 1
+    assert payloads, "No payloads found in InputData.json"
 
     headers = build_headers(token)
+    log_path = get_log_path()
+    failures: List[str] = []
     max_workers = min(concurrency, len(payloads))
-    print(f"total={len(payloads)} concurrency={max_workers} url={url}")
-    print(f"log_file={log_path}")
 
     with ThreadPoolExecutor(max_workers=max_workers) as executor:
         futures = [
             executor.submit(post_one, index, payload, url, headers, timeout)
             for index, payload in enumerate(payloads)
         ]
-        with open(log_path, "a", encoding="utf-8") as log_handle:
-            for future in as_completed(futures):
-                entry = future.result()
-                index = entry["index"]
-                status = entry["status_code"]
-                ok = entry["ok"]
-                preview = entry["preview"]
-                log_handle.write(json.dumps(entry, ensure_ascii=True) + "\n")
-                log_handle.flush()
-                print(f"[{index}] status={status} ok={ok} preview={preview}")
+        for future in as_completed(futures):
+            entry = future.result()
+            write_log(entry, log_path)
+            if not entry["ok"]:
+                failures.append(
+                    f'index={entry["index"]} status={entry["status_code"]} error={entry["error"]}'
+                )
 
-    return 0
-
-
-if __name__ == "__main__":
-    raise SystemExit(main())
+    if failures:
+        pytest.fail("Non-2xx responses: " + "; ".join(failures))

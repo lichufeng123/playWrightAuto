@@ -1,0 +1,914 @@
+[
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为超薄便携笔记本电脑，使用场景为北欧风居家书桌，搭配白色陶瓷杯与绿植点缀，镜头缓慢环绕展示金属磨砂质感和轻薄机身，光影柔和自然，画面风格简约干净，色彩以白 + 银灰为主，无人物出镜、无水印、无多余字幕，镜头切换流畅",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 7
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773307815416",
+                    "title": "3C 数码 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "65d2e37a-fe50-4fb1-bee3-6f9910dd9a48",
+                "parentId": "34a3fefc-2c18-4919-91aa-cde3133fb919",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526556
+                },
+                "type": "video",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "width": 400,
+                "height": 400,
+                "selected": false
+            },
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清 3C 产品场景图，主体为超薄便携笔记本电脑，使用场景为北欧风居家书桌，搭配白色陶瓷杯与绿植点缀，突出电脑的金属磨砂质感和轻薄机身，无人物出镜，画面风格简约干净，色彩以白 + 银灰为主，光影柔和自然。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773307809863",
+                    "title": "3C 数码 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "4d5ddab7-d830-4eed-99f2-978b30318d74",
+                "parentId": "34a3fefc-2c18-4919-91aa-cde3133fb919",
+                "position": {
+                    "x": 58.387450873231614,
+                    "y": 50
+                },
+                "type": "image",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "width": 400,
+                "height": 400
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "34a3fefc-2c18-4919-91aa-cde3133fb919"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/11",
+                            "camera": "Sony Venice",
+                            "shot": "Arri Signature Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                         "resolution": "2K",
+                        "prompt": "生成高清美妆产品场景图，主体为玻璃瓶装精华液，使用场景为黑色大理石化妆台，搭配银色化妆刷与珍珠装饰，突出瓶身的通透质感和液体的流动性，无人物出镜，画面风格轻奢高级，色彩以黑 + 金 + 透白为主，光影偏冷调高级感。"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308092912",
+                    "title": "美妆护肤 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "fee5aed0-85b1-462d-85a0-202a464567b0",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "33bf110f-2c9c-43d8-92b4-c9f738da4125",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image"
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为玻璃瓶装精华液，使用场景为黑色大理石化妆台，搭配银色化妆刷与珍珠装饰，镜头先特写瓶身通透质感，再缓慢倾斜展示精华液体的流动性，光影偏冷调高级感，画面风格轻奢高级，色彩以黑 + 金 + 透白为主，无人物出镜、无水印、无多余字幕，镜头过渡自然",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "美妆护肤 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "eca6715b-0620-4033-9042-b833a5929e58",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "33bf110f-2c9c-43d8-92b4-c9f738da4125",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526556
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "33bf110f-2c9c-43d8-92b4-c9f738da4125"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Arri Signature Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清家居产品场景图，主体为针织毛绒抱枕，使用场景为奶油风布艺沙发，搭配软糯毛毯与暖色落地灯，突出抱枕的柔软蓬松质感，无人物出镜，画面风格温馨治愈，色彩以奶白 + 浅咖 + 淡粉为主，光影温暖柔和。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308099311",
+                    "title": "家居日用 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "f1b43f2f-4139-4c00-85a0-06eda9b2c00c",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "82dc6c69-b2d4-4da3-bd72-0464f58ef491",
+                "position": {
+                    "x": 58.387450873231614,
+                    "y": 50
+                },
+                "type": "image"
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为针织毛绒抱枕，使用场景为奶油风布艺沙发，搭配软糯毛毯与暖色落地灯，镜头轻触抱枕展示柔软蓬松质感，缓慢平移展现整体摆放效果，光影温暖柔和，画面风格温馨治愈，色彩以奶白 + 浅咖 + 淡粉为主，无人物出镜、无水印、无多余字幕，镜头节奏舒缓",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "家居日用 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "bfccd94b-8f25-407b-a9c6-e7cea16ff5ba",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "82dc6c69-b2d4-4da3-bd72-0464f58ef491",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526556
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "82dc6c69-b2d4-4da3-bd72-0464f58ef491"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清户外产品场景图，主体为专业运动水壶，使用场景为户外登山步道，背景为浅景深绿植与蓝天，突出水壶的防摔耐磨和便携设计，搭配运动手环点缀，无人物出镜，画面风格活力清新，色彩以湖蓝 + 军绿 + 白色为主，光线为自然日光。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308099311",
+                    "title": "户外装备 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "079fb9d1-cacf-46a5-bbaf-89d8fdc7d4e4",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "d35f62cf-69fa-4bf7-915a-37c650073412",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image"
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为专业运动水壶，使用场景为户外登山步道，背景为浅景深绿植与蓝天，搭配运动手环点缀，镜头跟随水壶轻微晃动展示防摔耐磨质感，特写杯盖开合设计，光线为自然日光，画面风格活力清新，色彩以湖蓝 + 军绿 + 白色为主，无人物出镜、无水印、无多余字幕，镜头画面通透",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "户外装备 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "b6d50eca-f7ae-4551-8fec-2a94f6dd1644",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "d35f62cf-69fa-4bf7-915a-37c650073412",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526556
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "d35f62cf-69fa-4bf7-915a-37c650073412"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "resolution": "2K",
+                        "prompt": "生成高清食品产品场景图，主体为玻璃罐装水果茶，使用场景为原木色茶盘，搭配透明玻璃杯与新鲜柠檬片、薄荷叶，突出茶包的丰富果粒和茶汤的清透，无人物出镜，画面风格清新日系，色彩以浅黄 + 浅绿 + 透明色为主，光影明亮干净。"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308104055",
+                    "title": "食品零食 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "0a68484a-ea8a-4cac-9b4b-310f31bb4ba2",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "30032b03-e08b-4674-94e0-066b703bf2c2",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image"
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为玻璃罐装水果茶，使用场景为原木色茶盘，搭配透明玻璃杯与新鲜柠檬片、薄荷叶，镜头先展示茶包丰富果粒，再将热水冲入玻璃杯展现茶汤清透色泽，光影明亮干净，画面风格清新日系，色彩以浅黄 + 浅绿 + 透明色为主，无人物出镜、无水印、无多余字幕，镜头聚焦产品细节",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "食品零食 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "9e08f4be-fcb9-428d-a833-266047f2cc59",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "30032b03-e08b-4674-94e0-066b703bf2c2",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526559
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "30032b03-e08b-4674-94e0-066b703bf2c2"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "resolution": "2K",
+                        "prompt": "生成高清文创产品场景图，主体为皮质笔记本 + 金属钢笔套装，使用场景为极简白色桌面，搭配干花书签与黄铜圆规，突出套装的精致质感和文艺氛围，无人物出镜，画面风格简约 ins 风，色彩以米白 + 咖色 + 黄铜色为主，光影柔和均匀。"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308110167",
+                    "title": "文创文具 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "378e60ba-a56a-4cd0-9368-a505c4e90df1",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "fc7aa8b0-eb31-4ca7-b351-feeb0edbd19c",
+                "position": {
+                    "x": 46.78011002928338,
+                    "y": 58.70550563296115
+                },
+                "type": "image"
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为皮质笔记本 + 金属钢笔套装，使用场景为极简白色桌面，搭配干花书签与黄铜圆规，镜头先特写钢笔金属质感，再缓慢翻开笔记本展示内页质感，搭配轻缓镜头平移，光影柔和均匀，画面风格简约 ins 风，色彩以米白 + 咖色 + 黄铜色为主，无人物出镜、无水印、无多余字幕，镜头精致细腻",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "文创文具 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "2383d086-1452-46ef-afb2-0a0654188b72",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "fc7aa8b0-eb31-4ca7-b351-feeb0edbd19c",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526554
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "fc7aa8b0-eb31-4ca7-b351-feeb0edbd19c"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "resolution": "2K",
+                        "prompt": "生成高清宠物产品场景图，主体为卡通造型宠物食盆，使用场景为奶油风宠物窝旁，搭配彩色宠物零食与可爱毛绒玩具，突出食盆的防打翻设计和萌趣外观，无人物出镜，画面风格软萌可爱，色彩以浅蓝 + 浅粉 + 奶黄为主，光影明亮柔和。"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308110167",
+                    "title": "宠物用品 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "fc60e51c-015d-451f-b5e2-41d55724f720",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "6a1822dd-0c3f-46c9-b3f5-14ea556e2022",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image"
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为卡通造型宠物食盆，使用场景为奶油风宠物窝旁，搭配彩色宠物零食与可爱毛绒玩具，镜头环绕食盆展示萌趣外观，轻触边缘展示防打翻设计，光影明亮柔和，画面风格软萌可爱，色彩以浅蓝 + 浅粉 + 奶黄为主，无人物出镜、无水印、无多余字幕，镜头节奏轻快",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "宠物用品 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "ff38b20f-1e4b-45e7-aadb-be7bb7cfb225",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "6a1822dd-0c3f-46c9-b3f5-14ea556e2022",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526556
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "6a1822dd-0c3f-46c9-b3f5-14ea556e2022"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清服饰配件场景图，主体为真皮细腰带，使用场景为极简白色背景，搭配简约白衬衫与金属项链点缀，突出腰带的细腻皮质和精致金属扣，无人物出镜，画面风格极简通勤，色彩以黑 + 白 + 银色为主，光影偏高级冷调。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308110167",
+                    "title": "服饰配件 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "2bf3b468-0553-4884-a180-564f31a28028",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "f4a78fa8-08d6-4282-9fa0-3c7d7791f0a9",
+                "position": {
+                    "x": 58.387450873231614,
+                    "y": 50
+                },
+                "type": "image",
+                "selected": false
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为真皮细腰带，使用场景为极简白色背景，搭配简约白衬衫与金属项链点缀，镜头缓慢滑动展示腰带细腻皮质，特写精致金属扣细节，光影偏高级冷调，画面风格极简通勤，色彩以黑 + 白 + 银色为主，无人物出镜、无水印、无多余字幕，镜头简洁大气",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "服饰配件 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "dc94ca68-9fa9-4d84-8114-8bbda25a5b2e",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "f4a78fa8-08d6-4282-9fa0-3c7d7791f0a9",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526554
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "f4a78fa8-08d6-4282-9fa0-3c7d7791f0a9"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清厨房产品场景图，主体为不锈钢不粘锅，使用场景为现代简约厨房台面，搭配硅胶锅铲与新鲜蔬菜（番茄 / 西兰花），突出锅具的光滑不粘和简约设计，无人物出镜，画面风格干净实用，色彩以银白 + 浅灰 + 果蔬鲜色为主，光影自然。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308110167",
+                    "title": "厨房用具 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "637d2c5e-0e9a-4258-87e4-c09d62b7cbf9",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "5570b907-f526-4130-ba78-2dfa48b29756",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image",
+                "selected": false
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为不锈钢不粘锅，使用场景为现代简约厨房台面，搭配硅胶锅铲与新鲜蔬菜（番茄 / 西兰花），镜头展示锅具光滑不粘表面，轻划锅面体现质感，搭配蔬菜点缀营造使用场景，光影自然，画面风格干净实用，色彩以银白 + 浅灰 + 果蔬鲜色为主，无人物出镜、无水印、无多余字幕，镜头贴近产品实景",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "厨房用具 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "a054abc4-ee42-4490-8059-c8d247a8c2fb",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "5570b907-f526-4130-ba78-2dfa48b29756",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526556
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "5570b907-f526-4130-ba78-2dfa48b29756"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清绿植产品场景图，主体为多肉植物组合盆栽，使用场景为原木色花架，搭配复古陶制花盆与小石子装饰，突出多肉的饱满质感和清新生机，无人物出镜，画面风格自然森系，色彩以墨绿 + 浅绿 + 陶土色为主，光影为自然散射光。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308110167",
+                    "title": "绿植盆栽 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "89fa3b38-b2e2-4b44-a4e3-a198ef0a1881",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "f3a51241-1845-4896-80b0-c5c8e1fdda70",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image",
+                "selected": false
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为多肉植物组合盆栽，使用场景为原木色花架，搭配复古陶制花盆与小石子装饰，镜头缓慢环绕盆栽展示多肉饱满质感，轻扫叶片体现清新生机，光影为自然散射光，画面风格自然森系，色彩以墨绿 + 浅绿 + 陶土色为主，无人物出镜、无水印、无多余字幕，镜头画面清新自然",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "绿植盆栽 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "c8968d12-eecf-4033-89ca-f32a3694392e",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "f3a51241-1845-4896-80b0-c5c8e1fdda70",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526559
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "f3a51241-1845-4896-80b0-c5c8e1fdda70"
+    ]
+},
+{
+    "canvasId": "1735",
+    "workflowData": {
+        "nodes": [
+            {
+                "data": {
+                    "params": {
+                        "gen_count": 1,
+                        "aspect_ratio": "1:1",
+                        "cameraControl": {
+                            "enable": true,
+                            "aperture": "f/4",
+                            "camera": "Sony Venice",
+                            "shot": "Zeiss Ultra Prime",
+                            "focalLength": "50mm"
+                        },
+                        "model": "gemini-3-pro-image-preview",
+                        "prompt": "生成高清绿植产品场景图，主体为多肉植物组合盆栽，使用场景为原木色花架，搭配复古陶制花盆与小石子装饰，突出多肉的饱满质感和清新生机，无人物出镜，画面风格自然森系，色彩以墨绿 + 浅绿 + 陶土色为主，光影为自然散射光。",
+                        "resolution": "2K"
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": "1773308110167",
+                    "title": "绿植盆栽 - 图片",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "ced3adb5-341c-4da9-8a20-d777e5ce6e12",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "8805cc6b-f840-434a-96cf-5a7c73594c20",
+                "position": {
+                    "x": 58.38745087323173,
+                    "y": 50
+                },
+                "type": "image",
+                "selected": false
+            },
+            {
+                "data": {
+                    "params": {
+                        "modelType": "text_to_video",
+                        "model": "viduq2",
+                        "gen_count": 1,
+                        "prompt": "生成产品短视频，主体为多肉植物组合盆栽，使用场景为原木色花架，搭配复古陶制花盆与小石子装饰，镜头缓慢环绕盆栽展示多肉饱满质感，轻扫叶片体现清新生机，光影为自然散射光，画面风格自然森系，色彩以墨绿 + 浅绿 + 陶土色为主，无人物出镜、无水印、无多余字幕，镜头画面清新自然",
+                        "seniorParams": {},
+                        "resolution": "1080p",
+                        "aspect_ratio": "16:9",
+                        "duration": 2
+                    },
+                    "product": [],
+                    "taskInfo": {
+                        "status": "success"
+                    },
+                    "time": 1773393513607,
+                    "title": "绿植盆栽 - 视频",
+                    "value": ""
+                },
+                "extent": "parent",
+                "id": "6dd9ce7f-73e7-48c2-94e8-f168d8dac5b5",
+                "measured": {
+                    "width": 400,
+                    "height": 400
+                },
+                "parentId": "8805cc6b-f840-434a-96cf-5a7c73594c20",
+                "position": {
+                    "x": 50,
+                    "y": 601.4753469526559
+                },
+                "type": "video"
+            }
+        ],
+        "edges": []
+    },
+    "executeStrategy": "total",
+    "runningNodeIds": [
+        "8805cc6b-f840-434a-96cf-5a7c73594c20"
+    ]
+}
+
+]
