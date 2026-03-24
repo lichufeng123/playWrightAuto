@@ -19,8 +19,35 @@ export interface AccountFlowRecord {
   remark: string;
 }
 
+export interface BillingSnapshot {
+  balance: AccountBalance;
+  flowRecords: AccountFlowRecord[];
+  latestFlowId: number | null;
+}
+
 export function getBalanceTotal(balance: AccountBalance): number {
   return balance.rechargeBalance + balance.giftBalance;
+}
+
+export function getLatestFlowRecordId(records: AccountFlowRecord[]): number | null {
+  if (!records.length) {
+    return null;
+  }
+  return Math.max(...records.map(record => record.id));
+}
+
+export function filterFlowRecordsAfter(
+  records: AccountFlowRecord[],
+  latestKnownId: number | null,
+): AccountFlowRecord[] {
+  if (latestKnownId == null) {
+    return records;
+  }
+  return records.filter(record => record.id > latestKnownId);
+}
+
+export function sumFlowPoints(records: AccountFlowRecord[]): number {
+  return records.reduce((total, record) => total + record.flowPoints, 0);
 }
 
 export class BillingApi {
@@ -81,6 +108,24 @@ export class BillingApi {
 
     const payload = await response.json();
     return (payload.data?.dataList ?? []) as AccountFlowRecord[];
+  }
+
+  async listWorkflowFlows(size = 20): Promise<AccountFlowRecord[]> {
+    const records = await this.listFlows(size);
+    return records.filter(record => record.flowName === 'WORKFLOW');
+  }
+
+  async captureSnapshot(size = 20): Promise<BillingSnapshot> {
+    const [balance, flowRecords] = await Promise.all([
+      this.getBalance(),
+      this.listFlows(size),
+    ]);
+
+    return {
+      balance,
+      flowRecords,
+      latestFlowId: getLatestFlowRecordId(flowRecords),
+    };
   }
 
   async dispose(): Promise<void> {

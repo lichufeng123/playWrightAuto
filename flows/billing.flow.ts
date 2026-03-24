@@ -1,4 +1,11 @@
-import { AccountBalance, AccountFlowRecord, BillingApi, getBalanceTotal } from '../api/billing.api';
+import {
+  AccountBalance,
+  AccountFlowRecord,
+  BillingApi,
+  BillingSnapshot,
+  filterFlowRecordsAfter,
+  getBalanceTotal,
+} from '../api/billing.api';
 import { pollUntil } from '../utils/polling';
 
 export class BillingFlow {
@@ -6,6 +13,10 @@ export class BillingFlow {
 
   async getBalance(): Promise<AccountBalance> {
     return this.billingApi.getBalance();
+  }
+
+  async captureSnapshot(size = 20): Promise<BillingSnapshot> {
+    return this.billingApi.captureSnapshot(size);
   }
 
   async waitForBalanceDelta(
@@ -45,5 +56,32 @@ export class BillingFlow {
     }
 
     return matched;
+  }
+
+  async waitForFlowRecordsSince(
+    snapshotBefore: BillingSnapshot,
+    matcher: (record: AccountFlowRecord) => boolean,
+    options?: {
+      timeoutMs?: number;
+      minCount?: number;
+      size?: number;
+    },
+  ): Promise<AccountFlowRecord[]> {
+    const timeoutMs = options?.timeoutMs ?? 30_000;
+    const minCount = options?.minCount ?? 1;
+    const size = options?.size ?? 20;
+
+    return pollUntil(
+      async () => {
+        const records = await this.billingApi.listFlows(size);
+        return filterFlowRecordsAfter(records, snapshotBefore.latestFlowId);
+      },
+      records => records.filter(matcher).length >= minCount,
+      {
+        timeoutMs,
+        intervalMs: 1_500,
+        description: `等待新增消费流水达到 ${minCount} 条`,
+      },
+    ).then(records => records.filter(matcher));
   }
 }

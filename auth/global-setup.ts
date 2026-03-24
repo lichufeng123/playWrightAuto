@@ -1,7 +1,7 @@
 import { chromium, type FullConfig } from '@playwright/test';
 import * as fs from 'fs';
 import * as path from 'path';
-import { LoginPage } from '../pages/login.page';
+import { LoginFlow } from '../flows/login.flow';
 import { validLoginData } from '../data/login.data';
 
 function defaultAuthUserForBaseURL(url: string): 'testUser' | 'prodUser' {
@@ -110,15 +110,9 @@ async function globalSetup(config: FullConfig) {
   const browser = await chromium.launch();
   const context = await browser.newContext({ baseURL });
   const page = await context.newPage();
+  const loginFlow = new LoginFlow(page);
 
-  const loginPage = new LoginPage(page);
-
-  await loginPage.open();
-  await loginPage.loginWith(resolveLoginData(authUser));
-
-  // 确认业务页可访问，避免登录后仍停留在登录页
-  await page.goto('/aichat', { waitUntil: 'networkidle' });
-  await page.waitForURL(url => !url.pathname.includes('/login'));
+  await loginFlow.loginAndEnterApp(resolveLoginData(authUser));
 
   // 保存登录态
   await context.storageState({ path: storageStatePath });

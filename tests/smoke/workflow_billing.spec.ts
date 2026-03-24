@@ -1,49 +1,102 @@
 import { expect, test } from '@playwright/test';
 import { getBalanceTotal } from '../../api/billing.api';
+import { getNodeTaskStatus } from '../../api/task.api';
 import { BillingFlow } from '../../flows/billing.flow';
 import { WorkflowFlow } from '../../flows/workflow.flow';
-import { workflowCases, workflowTimeouts } from '../data/workflow.data';
+import { workflowBillingCases, workflowTimeouts } from '../data/workflow.data';
+import { buildWorkflowRunEvidence } from '../../utils/report';
 
 test.describe('工作流计费', () => {
   test.describe.configure({ mode: 'serial' });
 
-  test('计费：发起即预扣且快速点击只执行一次', async ({ page }, testInfo) => {
-    test.setTimeout(workflowTimeouts.smokeMs);
+  for (const billingCase of Object.values(workflowBillingCases)) {
+    test(billingCase.caseName, async ({ page }, testInfo) => {
+      test.setTimeout(workflowTimeouts.smokeMs);
 
-    const workflowFlow = new WorkflowFlow(page, testInfo);
+      const workflowFlow = new WorkflowFlow(page, testInfo);
 
-    try {
-      await workflowFlow.enterWorkflowWorkspace();
-      await workflowFlow.createBlankWorkflow();
+      try {
+        await workflowFlow.enterWorkflowWorkspace();
+        const { canvasId } = await workflowFlow.createBlankWorkflow();
 
-      const billingFlow = new BillingFlow(workflowFlow.billingApi);
-      const balanceBefore = await billingFlow.getBalance();
+        const billingFlow = new BillingFlow(workflowFlow.billingApi);
+        const billingSnapshotBefore = await billingFlow.captureSnapshot();
 
-      const node = await workflowFlow.addNode(workflowCases.billingImage);
-      const invoke = await workflowFlow.runSelectedNode(2);
+        const node = await workflowFlow.addNode(billingCase);
+        const invoke = await workflowFlow.runSelectedNode(billingCase.clickCount);
 
-      expect(invoke.invokeCount).toBe(1);
-      expect(invoke.taskId).toBeGreaterThan(0);
+        expect(invoke.invokeCount).toBe(billingCase.expectedInvokeCount);
+        expect(invoke.taskId).toBeGreaterThan(0);
 
-      const balanceAfter = await billingFlow.waitForBalanceDelta(
-        balanceBefore,
-        -node.cost,
-        workflowTimeouts.billingMs,
-      );
-      expect(getBalanceTotal(balanceAfter)).toBe(getBalanceTotal(balanceBefore) - node.cost);
+        if (billingCase.expectRunLockedDuringExecution) {
+          await workflowFlow.workflowPage.nodePanel.expectRunLocked();
+        }
 
-      const latestFlowRecord = await billingFlow.waitForLatestFlowRecord(
-        record =>
-          record.flowName === 'WORKFLOW' &&
-          record.flowPoints === -node.cost &&
-          (record.remark ?? '').includes(workflowCases.billingImage.expectedRemark),
-        workflowTimeouts.billingMs,
-      );
+        const acceptedNode = await workflowFlow.taskApi.waitForNodeTaskId(
+          canvasId,
+          node.nodeId,
+          invoke.taskId,
+          workflowTimeouts.billingMs,
+        );
+        expect(acceptedNode.data.taskInfo?.taskId).toBe(String(invoke.taskId));
 
-      expect(latestFlowRecord.flowType).toBe('FUNCTION_USAGE');
-      expect(latestFlowRecord.remark ?? '').toContain(workflowCases.billingImage.expectedRemark);
-    } finally {
-      await workflowFlow.dispose();
-    }
-  });
+        const successNode = await workflowFlow.taskApi.waitForNodeTerminalStatus(
+          canvasId,
+          node.nodeId,
+          workflowTimeouts.nodeExecutionMs,
+        );
+        expect(getNodeTaskStatus(successNode)).toBe('success');
+
+        const balanceAfter = await billingFlow.waitForBalanceDelta(
+          billingSnapshotBefore.balance,
+          -node.cost,
+          workflowTimeouts.billingMs,
+        );
+        expect(getBalanceTotal(balanceAfter)).toBe(
+          getBalanceTotal(billingSnapshotBefore.balance) - node.cost,
+        );
+
+        const newFlowRecords = await billingFlow.waitForFlowRecordsSince(
+          billingSnapshotBefore,
+          record =>
+            record.flowName === 'WORKFLOW' &&
+            record.flowPoints === -node.cost &&
+            (record.remark ?? '').includes(billingCase.expectedRemark),
+          {
+            timeoutMs: workflowTimeouts.billingMs,
+            minCount: billingCase.expectedNewFlowRecordCount ?? 1,
+          },
+        );
+        expect(newFlowRecords).toHaveLength(billingCase.expectedNewFlowRecordCount ?? 1);
+
+        const latestFlowRecord = newFlowRecords[0];
+        expect(latestFlowRecord.flowType).toBe('FUNCTION_USAGE');
+        expect(latestFlowRecord.remark ?? '').toContain(billingCase.expectedRemark);
+
+        const canvasSnapshot = await workflowFlow.captureCanvasSnapshot(
+          `计费-${billingCase.caseName}-画布快照`,
+          canvasId,
+        );
+        await workflowFlow.logger.attachJson(
+          `计费-${billingCase.caseName}-证据`,
+          buildWorkflowRunEvidence({
+            caseName: billingCase.caseName,
+            canvasId,
+            nodeId: node.nodeId,
+            nodeType: billingCase.nodeType,
+            taskId: invoke.taskId,
+            invokeCount: invoke.invokeCount,
+            cost: node.cost,
+            balanceBefore: billingSnapshotBefore.balance,
+            balanceAfter,
+            flowRecords: newFlowRecords,
+            terminalNode: successNode,
+            canvasSnapshot,
+          }),
+        );
+      } finally {
+        await workflowFlow.dispose();
+      }
+    });
+  }
 });

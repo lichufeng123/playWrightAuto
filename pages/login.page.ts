@@ -23,7 +23,7 @@ export class LoginPage {
     await this.page.goto('/login');
   }
 
-  async loginWith(data:{phone:string;code:string}) {
+  async submitCredentials(data:{phone:string;code:string}) {
     await this.phoneInput.fill(data.phone);
     await Promise.all([
         this.page.waitForResponse(response =>
@@ -34,7 +34,15 @@ export class LoginPage {
     await this.codeInput.fill(data.code);
     await this.checkButton.click();
     await this.loginButton.click();
+  }
+
+  async waitForLoginSuccess() {
     await this.page.waitForURL(url => !url.pathname.includes('/login'));
+  }
+
+  async loginWith(data:{phone:string;code:string}) {
+    await this.submitCredentials(data);
+    await this.waitForLoginSuccess();
   }
 
   async isLoginSuccess(): Promise<boolean> {

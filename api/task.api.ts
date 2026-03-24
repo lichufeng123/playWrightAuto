@@ -45,6 +45,31 @@ export interface CanvasSnapshot {
   raw: unknown;
 }
 
+const terminalNodeStatuses = ['success', 'failed', 'fail', 'error', 'cancel', 'canceled', 'cancelled'];
+
+function normalizeTaskStatus(status?: string): string {
+  return (status ?? '').toLowerCase();
+}
+
+export function getNodeTaskStatus(node: WorkflowNode): string {
+  return normalizeTaskStatus(node.data.taskInfo?.status);
+}
+
+export function getNodeProductCount(node: WorkflowNode): number {
+  return Array.isArray(node.data.product) ? node.data.product.length : 0;
+}
+
+export function hasNodeOutput(node: WorkflowNode): boolean {
+  return Boolean(node.data.value) || Boolean(node.data.tempFile) || getNodeProductCount(node) > 0;
+}
+
+export function findNodeById(
+  snapshot: CanvasSnapshot,
+  nodeId: string,
+): WorkflowNode | undefined {
+  return snapshot.data.nodes.find(node => node.id === nodeId);
+}
+
 export class TaskApi {
   private constructor(
     private readonly requestContext: APIRequestContext,
@@ -142,6 +167,76 @@ export class TaskApi {
     );
 
     const targetNode = snapshot.data.nodes.find(node => node.id === nodeId);
+    if (!targetNode) {
+      throw new Error(`未找到节点 ${nodeId}`);
+    }
+
+    return targetNode;
+  }
+
+  async getNode(
+    canvasId: number | string,
+    nodeId: string,
+  ): Promise<WorkflowNode> {
+    const snapshot = await this.getCanvas(canvasId);
+    const targetNode = findNodeById(snapshot, nodeId);
+    if (!targetNode) {
+      throw new Error(`未找到节点 ${nodeId}`);
+    }
+    return targetNode;
+  }
+
+  async waitForNodeTaskId(
+    canvasId: number | string,
+    nodeId: string,
+    taskId: number | string,
+    timeoutMs = 60_000,
+  ): Promise<WorkflowNode> {
+    const expectedTaskId = String(taskId);
+    return this.waitForNodePredicate(
+      canvasId,
+      nodeId,
+      node => (node.data.taskInfo?.taskId ?? '') === expectedTaskId,
+      timeoutMs,
+      `等待节点 ${nodeId} 绑定任务 ${expectedTaskId}`,
+    );
+  }
+
+  async waitForNodeTerminalStatus(
+    canvasId: number | string,
+    nodeId: string,
+    timeoutMs = 180_000,
+  ): Promise<WorkflowNode> {
+    return this.waitForNodePredicate(
+      canvasId,
+      nodeId,
+      node => terminalNodeStatuses.includes(getNodeTaskStatus(node)),
+      timeoutMs,
+      `等待节点 ${nodeId} 进入终态`,
+    );
+  }
+
+  private async waitForNodePredicate(
+    canvasId: number | string,
+    nodeId: string,
+    predicate: (node: WorkflowNode) => boolean | Promise<boolean>,
+    timeoutMs: number,
+    description: string,
+  ): Promise<WorkflowNode> {
+    const snapshot = await pollUntil(
+      () => this.getCanvas(canvasId),
+      async canvas => {
+        const targetNode = findNodeById(canvas, nodeId);
+        return Boolean(targetNode && (await predicate(targetNode)));
+      },
+      {
+        timeoutMs,
+        intervalMs: 2_000,
+        description,
+      },
+    );
+
+    const targetNode = findNodeById(snapshot, nodeId);
     if (!targetNode) {
       throw new Error(`未找到节点 ${nodeId}`);
     }

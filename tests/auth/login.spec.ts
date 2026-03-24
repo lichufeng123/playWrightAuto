@@ -1,29 +1,27 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../../pages/login.page';
+import { LoginFlow } from '../../flows/login.flow';
 import { validLoginData, invalidLoginData} from '../../data/login.data'
 
 
 for(const data of Object.values(validLoginData)){
     test(`login success - ${data.description}`, async ({ page }) => {
-    const loginPage = new LoginPage(page);
+    const loginFlow = new LoginFlow(page);
 
-    await loginPage.open();
-    await loginPage.loginWith(data);
-//     await loginPage.login('validLoginData.phone', 'validLoginData.code');
+    await loginFlow.login(data);
 
-    expect(loginPage.isLoginSuccess()).toBeTruthy();
+    await expect.poll(async () => loginFlow.isLoginSuccess()).toBeTruthy();
 });
 
     }
 
 
-test('login failed with wrong code', async ({ page }) => {
-  const loginPage = new LoginPage(page);
+for (const data of Object.values(invalidLoginData)) {
+    test(`login failed - ${data.description}`, async ({ page }) => {
+      const loginFlow = new LoginFlow(page);
 
-  await loginPage.open();
-  await loginPage.loginWith(invalidLoginData);
-//   await loginPage.login('invalidLoginData.phone', 'invalidLoginData.code');
+      await loginFlow.submitCredentials(data);
 
-  const error = await loginPage.getErrorMessage();
-  expect(error).toContain('验证码');
-});
+      const error = await loginFlow.loginPage.getErrorMessage();
+      expect(error).toContain('验证码');
+    });
+}

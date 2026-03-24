@@ -1,6 +1,6 @@
 import { expect, Page, TestInfo } from '@playwright/test';
 import { BillingApi } from '../api/billing.api';
-import { TaskApi } from '../api/task.api';
+import { CanvasSnapshot, TaskApi } from '../api/task.api';
 import { WorkflowPage } from '../pages/workflow.page';
 import { enterWorkflowPage } from '../tests/helpers/navigation';
 import { StepLogger } from '../utils/logger';
@@ -81,10 +81,10 @@ export class WorkflowFlow {
     await this.workflowPage.canvas.closeUploadDialogIfOpen();
     await this.workflowPage.canvas.selectNode(options.nodeType, beforeCount);
     if (options.prompt) {
-      await this.workflowPage.canvas.fillSelectedPrompt(options.prompt);
+      await this.workflowPage.nodePanel.fillPrompt(options.prompt);
     }
 
-    const cost = await this.workflowPage.canvas.readSelectedNodeCost();
+    const cost = await this.workflowPage.nodePanel.readCost();
     const latestNode = latestSnapshot.data.nodes.filter(node => node.type === options.nodeType).at(-1);
     if (!latestNode) {
       throw new Error(`未找到刚添加的 ${options.nodeLabel} 节点`);
@@ -103,7 +103,7 @@ export class WorkflowFlow {
   }> {
     await this.workflowPage.canvas.closeUploadDialogIfOpen();
     await this.logger.log(`执行选中节点，点击次数: ${clickCount}`);
-    const result = await this.workflowPage.canvas.runSelectedNode(clickCount);
+    const result = await this.workflowPage.nodePanel.runSelectedNode(clickCount);
     await this.logger.capture(`已触发执行-${result.taskId}`);
     return {
       invokeCount: result.invokeCount,
@@ -168,6 +168,15 @@ export class WorkflowFlow {
     await this.workflowPage.canvas.waitForReady();
     await expect(this.page).toHaveURL(/\/canvas\/\d+/);
     await this.logger.capture('刷新画布后');
+  }
+
+  async captureCanvasSnapshot(
+    label: string,
+    canvasId = this.workflowPage.getCanvasId(),
+  ): Promise<CanvasSnapshot> {
+    const snapshot = await this.taskApi.getCanvas(canvasId);
+    await this.logger.attachJson(label, snapshot);
+    return snapshot;
   }
 
   async dispose(): Promise<void> {

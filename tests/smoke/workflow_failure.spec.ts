@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { WorkflowFlow } from '../../flows/workflow.flow';
 import { workflowCases, workflowTimeouts } from '../data/workflow.data';
+import { buildCanvasConsistencyEvidence } from '../../utils/report';
 
 test.describe('工作流异常与一致性', () => {
   test.describe.configure({ mode: 'serial' });
@@ -27,6 +28,7 @@ test.describe('工作流异常与一致性', () => {
       const canvasBeforeReload = await workflowFlow.taskApi.waitForEdgeCount(canvasId, 1);
       expect(canvasBeforeReload.data.nodes.filter(node => node.type === 'image')).toHaveLength(1);
       expect(canvasBeforeReload.data.nodes.filter(node => node.type === 'video')).toHaveLength(1);
+      await workflowFlow.logger.attachJson('异常一致性-刷新前画布快照', canvasBeforeReload);
 
       await workflowFlow.reloadCanvas();
 
@@ -34,6 +36,16 @@ test.describe('工作流异常与一致性', () => {
       expect(canvasAfterReload.data.edges).toHaveLength(1);
       expect(canvasAfterReload.data.nodes.filter(node => node.type === 'image')).toHaveLength(1);
       expect(canvasAfterReload.data.nodes.filter(node => node.type === 'video')).toHaveLength(1);
+      await workflowFlow.logger.attachJson('异常一致性-刷新后画布快照', canvasAfterReload);
+      await workflowFlow.logger.attachJson(
+        '异常一致性-对比证据',
+        buildCanvasConsistencyEvidence({
+          caseName: '异常场景：页面刷新后节点与连线保持一致',
+          canvasId,
+          beforeReload: canvasBeforeReload,
+          afterReload: canvasAfterReload,
+        }),
+      );
 
       await expect(workflowFlow.workflowPage.canvas.nodeByType('image')).toBeVisible();
       await expect(workflowFlow.workflowPage.canvas.nodeByType('video')).toBeVisible();

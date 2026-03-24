@@ -1,6 +1,7 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { CanvasComponent } from '../components/canvas.component';
 import { DrawerComponent } from '../components/drawer.component';
+import { NodePanelPage } from './node.panel.page';
 import { withRetry } from '../utils/retry';
 import { waitForClickable, waitForVisible } from '../utils/wait';
 
@@ -8,6 +9,7 @@ export class WorkflowPage {
   readonly page: Page;
   readonly canvas: CanvasComponent;
   readonly drawer: DrawerComponent;
+  readonly nodePanel: NodePanelPage;
   readonly myProjectsTab: Locator;
   readonly myFavoritesTab: Locator;
   readonly projectSearchInput: Locator;
@@ -17,6 +19,7 @@ export class WorkflowPage {
     this.page = page;
     this.canvas = new CanvasComponent(page);
     this.drawer = new DrawerComponent(page);
+    this.nodePanel = new NodePanelPage(page);
     this.myProjectsTab = page.getByRole('button', { name: '我的项目' });
     this.myFavoritesTab = page.getByRole('button', { name: '我的收藏' });
     this.projectSearchInput = page.getByPlaceholder('搜索项目').first();
