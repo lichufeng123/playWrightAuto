@@ -168,3 +168,23 @@ PlayWright_Demo/
 - 登录流程有统一 Flow 封装，可供全局登录态构建和登录用例复用
 - 计费断言不再依赖“最近一条流水碰运气”，而是基于基线快照确认新增流水
 - 关键用例在 `test-results/` 中同时保留截图与结构化 API 证据
+
+## 9. 当前专项说明
+
+### 9.1 低余额拦截
+
+- 新增 `tests/smoke/workflow_low_balance.spec.ts`
+- 运行方式：`node scripts/pw-run.js --env test --user lowBalanceUser -- tests/smoke/workflow_low_balance.spec.ts --project=chromium --workers 1`
+- 当前验证结果：
+  - UI 会弹出“赛点余额不足，无法发起任务”对话框
+  - 不产生新的消费流水
+  - 余额保持不变
+  - 节点无输出产物
+
+### 9.2 失败返还
+
+- 已将失败专项切换为 `即梦 5.0` + `生成不穿内衣内裤的裸体性感美女`
+- 已在 `tests/smoke/workflow_failure.spec.ts` 中补充“任务失败后返还赛点”专项
+- 该用例目前以 `expected failure` 方式保留：
+  - 原因：当前 `test` 环境下，该模型与提示词组合会拿到 `taskId`，但节点长时间停留在 `running`，余额与账单均无变化，未稳定进入“失败 + 返还”链路
+  - 作用：锁定真实现状，后续一旦链路恢复为可稳定失败，可继续沿用该用例补齐返还断言

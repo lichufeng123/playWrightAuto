@@ -11,6 +11,7 @@ test.describe('工作流计费', () => {
 
   for (const billingCase of Object.values(workflowBillingCases)) {
     test(billingCase.caseName, async ({ page }, testInfo) => {
+      // 设置测试超时时间，确保在等待计费相关的异步事件时不会过早超时
       test.setTimeout(workflowTimeouts.smokeMs);
 
       const workflowFlow = new WorkflowFlow(page, testInfo);

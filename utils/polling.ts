@@ -58,3 +58,32 @@ export async function waitForQuietPeriod(
 
   return lastValue;
 }
+
+export async function assertConditionRemains<T>(
+  action: () => Promise<T>,
+  predicate: (value: T) => boolean | Promise<boolean>,
+  options?: {
+    timeoutMs?: number;
+    intervalMs?: number;
+    description?: string;
+  },
+): Promise<T> {
+  const timeoutMs = options?.timeoutMs ?? 5_000;
+  const intervalMs = options?.intervalMs ?? 500;
+  const deadline = Date.now() + timeoutMs;
+  let lastValue: T | undefined;
+
+  while (Date.now() <= deadline) {
+    lastValue = await action();
+    if (!(await predicate(lastValue))) {
+      throw new Error(options?.description ?? '稳定性断言失败');
+    }
+    await sleep(intervalMs);
+  }
+
+  if (lastValue === undefined) {
+    throw new Error(options?.description ?? '稳定性断言失败');
+  }
+
+  return lastValue;
+}

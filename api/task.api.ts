@@ -1,6 +1,6 @@
 import { APIRequestContext, Page } from '@playwright/test';
 import { createAuthedApiContext } from './client';
-import { pollUntil } from '../utils/polling';
+import { assertConditionRemains, pollUntil } from '../utils/polling';
 
 export interface WorkflowTaskInfo {
   status?: string;
@@ -45,7 +45,16 @@ export interface CanvasSnapshot {
   raw: unknown;
 }
 
-const terminalNodeStatuses = ['success', 'failed', 'fail', 'error', 'cancel', 'canceled', 'cancelled'];
+const terminalNodeStatuses = [
+  'success',
+  'failed',
+  'fail',
+  'failure',
+  'error',
+  'cancel',
+  'canceled',
+  'cancelled',
+];
 
 function normalizeTaskStatus(status?: string): string {
   return (status ?? '').toLowerCase();
@@ -213,6 +222,25 @@ export class TaskApi {
       node => terminalNodeStatuses.includes(getNodeTaskStatus(node)),
       timeoutMs,
       `等待节点 ${nodeId} 进入终态`,
+    );
+  }
+
+  async assertNodeTaskNotStarted(
+    canvasId: number | string,
+    nodeId: string,
+    observeMs = 5_000,
+  ): Promise<WorkflowNode> {
+    return assertConditionRemains(
+      () => this.getNode(canvasId, nodeId),
+      node => {
+        const status = getNodeTaskStatus(node);
+        return !node.data.taskInfo?.taskId && status !== 'running' && !terminalNodeStatuses.includes(status);
+      },
+      {
+        timeoutMs: observeMs,
+        intervalMs: 1_000,
+        description: `节点 ${nodeId} 已开始执行，未命中余额不足拦截`,
+      },
     );
   }
 

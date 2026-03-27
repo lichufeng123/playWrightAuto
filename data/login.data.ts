@@ -8,6 +8,11 @@ export const validLoginData = {
         phone: '13172865299',
         code: '1234',
         description: '测试环境账号 (testUser)',
+    },
+    lowBalanceUser: {
+        phone: '13246034775',
+        code: '1234',
+        description: '低余额测试账号 (lowBalanceUser)',
     }
 }
 

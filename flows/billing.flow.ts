@@ -6,7 +6,7 @@ import {
   filterFlowRecordsAfter,
   getBalanceTotal,
 } from '../api/billing.api';
-import { pollUntil } from '../utils/polling';
+import { assertConditionRemains, pollUntil } from '../utils/polling';
 
 export class BillingFlow {
   constructor(private readonly billingApi: BillingApi) {}
@@ -83,5 +83,38 @@ export class BillingFlow {
         description: `等待新增消费流水达到 ${minCount} 条`,
       },
     ).then(records => records.filter(matcher));
+  }
+
+  async assertBalanceUnchanged(
+    balanceBefore: AccountBalance,
+    observeMs = 5_000,
+  ): Promise<AccountBalance> {
+    return assertConditionRemains(
+      () => this.billingApi.getBalance(),
+      balance => getBalanceTotal(balance) === getBalanceTotal(balanceBefore),
+      {
+        timeoutMs: observeMs,
+        intervalMs: 1_000,
+        description: '余额发生变化，未命中余额不足拦截',
+      },
+    );
+  }
+
+  async assertNoNewFlowRecordsSince(
+    snapshotBefore: BillingSnapshot,
+    observeMs = 5_000,
+    size = 20,
+  ): Promise<AccountFlowRecord[]> {
+    const latestRecords = await assertConditionRemains(
+      () => this.billingApi.listFlows(size),
+      records => filterFlowRecordsAfter(records, snapshotBefore.latestFlowId).length === 0,
+      {
+        timeoutMs: observeMs,
+        intervalMs: 1_000,
+        description: '出现了新增消费流水，未命中余额不足拦截',
+      },
+    );
+
+    return filterFlowRecordsAfter(latestRecords, snapshotBefore.latestFlowId);
   }
 }

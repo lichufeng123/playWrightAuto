@@ -33,7 +33,7 @@ export function buildWorkflowRunEvidence(options: {
   canvasId: number;
   nodeId: string;
   nodeType: string;
-  taskId: number;
+  taskId: number | null;
   invokeCount: number;
   cost: number;
   balanceBefore?: AccountBalance;

@@ -1,6 +1,6 @@
 import { expect, Locator, Page } from '@playwright/test';
 import { dragBetweenLocators, dragLocatorByOffset } from '../utils/drag';
-import { waitForCanvasReady, waitForClickable, waitForVisible } from '../utils/wait';
+import { waitForCanvasReady, waitForVisible } from '../utils/wait';
 
 export class CanvasComponent {
   readonly page: Page;
@@ -34,8 +34,8 @@ export class CanvasComponent {
 
   async selectNode(type: string, index = 0): Promise<void> {
     const node = this.nodeByType(type, index);
-    await waitForClickable(node, 15_000);
-    await node.click();
+    await waitForVisible(node, 15_000);
+    await node.click({ force: true });
   }
 
   async closeUploadDialogIfOpen(): Promise<void> {

@@ -1,0 +1,4 @@
+﻿interface:
+  display_name: "工作流自动化"
+  short_description: "快速理解并扩展当前仓库工作流自动化框架、用例与分层约束"
+  default_prompt: "Use $workflow-test-automation to understand, review, or extend the workflow automation framework in this repository."

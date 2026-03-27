@@ -1,14 +1,21 @@
 import { expect, Page, TestInfo } from '@playwright/test';
 import { BillingApi } from '../api/billing.api';
 import { CanvasSnapshot, TaskApi } from '../api/task.api';
+import { CameraControlOptions } from '../pages/node.panel.page';
 import { WorkflowPage } from '../pages/workflow.page';
 import { enterWorkflowPage } from '../tests/helpers/navigation';
 import { StepLogger } from '../utils/logger';
+import { withRetry } from '../utils/retry';
 
 export interface AddWorkflowNodeOptions {
   nodeLabel: string;
   nodeType: string;
   prompt?: string;
+  model?: string;
+  resolution?: string;
+  aspectRatio?: string;
+  generationCount?: number | string;
+  cameraControl?: CameraControlOptions;
 }
 
 export class WorkflowFlow {
@@ -79,10 +86,52 @@ export class WorkflowFlow {
     );
 
     await this.workflowPage.canvas.closeUploadDialogIfOpen();
-    await this.workflowPage.canvas.selectNode(options.nodeType, beforeCount);
+    await withRetry(
+      `选中节点并打开参数面板: ${options.nodeLabel}`,
+      async () => {
+        if (!(await this.workflowPage.nodePanel.isPanelReady())) {
+          await this.workflowPage.canvas.selectNode(options.nodeType, beforeCount);
+        }
+        await this.workflowPage.canvas.closeUploadDialogIfOpen();
+        await this.workflowPage.nodePanel.waitForPanelReady(10_000);
+      },
+      { retries: 2 },
+    );
+    if (options.model) {
+      await this.workflowPage.canvas.closeUploadDialogIfOpen();
+      await this.workflowPage.nodePanel.selectModel(options.model);
+    }
+    if (options.resolution) {
+      await this.workflowPage.canvas.closeUploadDialogIfOpen();
+      await this.workflowPage.nodePanel.selectResolution(options.resolution);
+    }
+    if (options.aspectRatio) {
+      await this.workflowPage.canvas.closeUploadDialogIfOpen();
+      await this.workflowPage.nodePanel.selectAspectRatio(options.aspectRatio);
+    }
+    if (options.generationCount != null) {
+      await this.workflowPage.canvas.closeUploadDialogIfOpen();
+      await this.workflowPage.nodePanel.selectGenerationCount(options.generationCount);
+    }
     if (options.prompt) {
       await this.workflowPage.nodePanel.fillPrompt(options.prompt);
     }
+    if (options.cameraControl) {
+      await this.workflowPage.canvas.closeUploadDialogIfOpen();
+      await this.workflowPage.nodePanel.configureCameraControl(options.cameraControl);
+    }
+
+    await withRetry(
+      `摄影参数配置后重新激活节点面板: ${options.nodeLabel}`,
+      async () => {
+        if (!(await this.workflowPage.nodePanel.isPanelReady())) {
+          await this.workflowPage.canvas.selectNode(options.nodeType, beforeCount);
+        }
+        await this.workflowPage.canvas.closeUploadDialogIfOpen();
+        await this.workflowPage.nodePanel.waitForPanelReady(10_000);
+      },
+      { retries: 2 },
+    );
 
     const cost = await this.workflowPage.nodePanel.readCost();
     const latestNode = latestSnapshot.data.nodes.filter(node => node.type === options.nodeType).at(-1);
@@ -108,6 +157,29 @@ export class WorkflowFlow {
     return {
       invokeCount: result.invokeCount,
       taskId: result.taskId,
+    };
+  }
+
+  async tryRunSelectedNode(
+    clickCount = 1,
+    responseTimeoutMs = 5_000,
+  ): Promise<{
+    accepted: boolean;
+    invokeCount: number;
+    taskId: number | null;
+    message: string | null;
+    payload: unknown;
+  }> {
+    await this.workflowPage.canvas.closeUploadDialogIfOpen();
+    await this.logger.log(`尝试执行选中节点，点击次数: ${clickCount}`);
+    const result = await this.workflowPage.nodePanel.tryRunSelectedNode(clickCount, responseTimeoutMs);
+    await this.logger.capture(`尝试执行结果-${result.accepted ? result.taskId : 'blocked'}`);
+    return {
+      accepted: result.accepted,
+      invokeCount: result.invokeCount,
+      taskId: result.taskId,
+      message: result.message,
+      payload: result.payload,
     };
   }
 
