@@ -69,6 +69,31 @@ export class WorkflowFlow {
     return { canvasId };
   }
 
+  async deleteProjectsByKeyword(keyword: string, maxDeleteCount = 200): Promise<number> {
+    await this.logger.log(`批量删除工作流，关键字: ${keyword}`);
+    let deletedCount = 0;
+
+    for (let attempt = 0; attempt < maxDeleteCount; attempt += 1) {
+      const deleted = await this.workflowPage.deleteFirstProjectByKeyword(keyword).catch(async error => {
+        await this.logger.attachText('工作流批量删除错误', String(error));
+        throw error;
+      });
+
+      if (!deleted) {
+        break;
+      }
+
+      deletedCount += 1;
+      await this.logger.log(`已删除第 ${deletedCount} 个工作流`);
+    }
+
+    await this.logger.attachText(
+      '工作流批量删除结果',
+      `keyword=${keyword}, deletedCount=${deletedCount}`,
+    );
+    return deletedCount;
+  }
+
   async addNode(options: AddWorkflowNodeOptions): Promise<{
     cost: number;
     nodeId: string;
