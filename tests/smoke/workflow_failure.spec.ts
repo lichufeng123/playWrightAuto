@@ -1,6 +1,7 @@
 import { expect, test } from '@playwright/test';
 import { sumFlowPoints } from '../../api/billing.api';
 import { getNodeTaskStatus, hasNodeOutput } from '../../api/task.api';
+import { AssetFlow } from '../../flows/asset.flow';
 import { BillingFlow } from '../../flows/billing.flow';
 import { WorkflowFlow } from '../../flows/workflow.flow';
 import { workflowCases, workflowTimeouts } from '../data/workflow.data';
@@ -50,8 +51,8 @@ test.describe('工作流异常与一致性', () => {
         }),
       );
 
-      await expect(workflowFlow.workflowPage.canvas.nodeByType('image')).toBeVisible();
-      await expect(workflowFlow.workflowPage.canvas.nodeByType('video')).toBeVisible();
+      await workflowFlow.expectNodeVisible('image');
+      await workflowFlow.expectNodeVisible('video');
     } finally {
       await workflowFlow.dispose();
     }
@@ -72,6 +73,8 @@ test.describe('工作流异常与一致性', () => {
 
       const billingFlow = new BillingFlow(workflowFlow.billingApi);
       const billingSnapshotBefore = await billingFlow.captureSnapshot(30);
+      const assetFlow = new AssetFlow(workflowFlow.assetApi);
+      const assetSnapshotBefore = await assetFlow.captureSnapshot('image');
       const node = await workflowFlow.addNode(workflowCases.failureSensitiveImage);
 
       const invoke = await workflowFlow.runSelectedNode();
@@ -102,7 +105,7 @@ test.describe('工作流异常与一致性', () => {
         30_000,
       ).catch(async () => await workflowFlow.taskApi.getNode(canvasId, node.nodeId));
 
-      const sensitiveHintText = await workflowFlow.workflowPage.nodePanel.readSensitiveContentHint();
+      const sensitiveHintText = await workflowFlow.readSensitiveContentHint();
       expect(sensitiveHintText).toContain('敏感内容');
       await workflowFlow.logger.attachText('失败返还-页面提示', sensitiveHintText);
       await workflowFlow.logger.attachJson('失败返还-节点快照', failedNode);
@@ -112,6 +115,13 @@ test.describe('工作流异常与一致性', () => {
         );
       }
       expect(hasNodeOutput(failedNode)).toBeFalsy();
+      const assetResult = await assetFlow.assertNoNewAssetsSince(
+        assetSnapshotBefore,
+        record => record.sourceType === 'workflow' && record.canvasId === canvasId,
+        8_000,
+        30,
+      );
+      expect(assetResult.matchedAssets).toHaveLength(0);
 
       const balanceAfterRefund = await billingFlow.waitForBalanceDelta(
         billingSnapshotBefore.balance,
@@ -156,6 +166,9 @@ test.describe('工作流异常与一致性', () => {
           flowRecords: refundFlowRecords,
           terminalNode: failedNode,
           canvasSnapshot,
+          assetSnapshotBefore,
+          assetSnapshotAfter: assetResult.snapshot,
+          matchedAssets: assetResult.matchedAssets,
         }),
       );
     } finally {

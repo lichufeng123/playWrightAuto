@@ -29,6 +29,7 @@ export interface WorkflowSmokeCase extends WorkflowNodeCase {
 export const workflowTimeouts = {
   canvasReadyMs: 45_000,
   billingMs: 60_000,
+  assetMs: 60_000,
   smokeMs: 240_000,
   nodeExecutionMs: 180_000,
 };

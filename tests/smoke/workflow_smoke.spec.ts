@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
+import { resolveAssetKindByNodeType } from '../../api/asset.api';
 import { WorkflowNode, getNodeProductCount, hasNodeOutput } from '../../api/task.api';
+import { AssetFlow } from '../../flows/asset.flow';
 import { BillingFlow } from '../../flows/billing.flow';
 import { WorkflowFlow } from '../../flows/workflow.flow';
 import { WorkflowSmokeCase, workflowSmokeCases, workflowTimeouts } from '../data/workflow.data';
@@ -109,35 +111,39 @@ test.describe(workflowSmokeTitle, () => {
         const node = await workflowFlow.addNode(smokeCase);
 
         if (smokeCase.model) {
-          const selectedModel = await workflowFlow.workflowPage.nodePanel.readModel();
+          const selectedModel = await workflowFlow.readSelectedModel();
           expect(normalizeText(selectedModel)).toContain(normalizeText(smokeCase.model));
         }
 
         if (smokeCase.resolution) {
           await expect
-            .poll(async () => await workflowFlow.workflowPage.nodePanel.readResolution())
+            .poll(async () => await workflowFlow.readSelectedResolution())
             .toContain(smokeCase.resolution);
         }
 
         if (smokeCase.aspectRatio) {
           await expect
-            .poll(async () => await workflowFlow.workflowPage.nodePanel.readAspectRatio())
+            .poll(async () => await workflowFlow.readSelectedAspectRatio())
             .toContain(smokeCase.aspectRatio);
         }
 
         if (smokeCase.generationCount != null) {
           const expectedGenerationCountText = `${parseGenerationCount(smokeCase.generationCount)}${generationCountSuffix}`;
           await expect
-            .poll(async () => await workflowFlow.workflowPage.nodePanel.readGenerationCount())
+            .poll(async () => await workflowFlow.readSelectedGenerationCount())
             .toContain(expectedGenerationCountText);
         }
 
         if (smokeCase.expectCameraControl) {
-          await workflowFlow.workflowPage.nodePanel.expectCameraControlVisible();
+          await workflowFlow.expectCameraControlVisible();
         }
 
+        const assetType = resolveAssetKindByNodeType(smokeCase.nodeType);
+        expect(assetType).toBeTruthy();
         const billingFlow = new BillingFlow(workflowFlow.billingApi);
         const billingSnapshotBefore = await billingFlow.captureSnapshot();
+        const assetFlow = new AssetFlow(workflowFlow.assetApi);
+        const assetSnapshotBefore = await assetFlow.captureSnapshot(assetType!);
 
         const invoke = await workflowFlow.runSelectedNode();
         expect(invoke.invokeCount).toBe(1);
@@ -173,6 +179,18 @@ test.describe(workflowSmokeTitle, () => {
               : `${imageDownloadLabel}-${index + 1}`;
           await workflowFlow.logger.downloadFile(label, productUrls[index]);
         }
+
+        const assetResult = await assetFlow.waitForNewAssetsSince(
+          assetSnapshotBefore,
+          record => record.canvasId === canvasId && productUrls.includes(record.fileUrl),
+          {
+            timeoutMs: workflowTimeouts.assetMs,
+            minCount: productUrls.length,
+            pageSize: Math.max(15, productUrls.length + 5),
+          },
+        );
+        expect(assetResult.matchedAssets).toHaveLength(productUrls.length);
+        await workflowFlow.expectAssetLibraryContainsUrls(assetType!, productUrls, workflowTimeouts.assetMs);
 
         const balanceAfter = await billingFlow.waitForBalanceDelta(
           billingSnapshotBefore.balance,
@@ -212,6 +230,9 @@ test.describe(workflowSmokeTitle, () => {
             flowRecords,
             terminalNode: successNode,
             canvasSnapshot,
+            assetSnapshotBefore,
+            assetSnapshotAfter: assetResult.snapshot,
+            matchedAssets: assetResult.matchedAssets,
           }),
         );
       } finally {

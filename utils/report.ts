@@ -1,4 +1,8 @@
 import {
+  AssetRecord,
+  AssetSnapshot,
+} from '../api/asset.api';
+import {
   AccountBalance,
   AccountFlowRecord,
   getBalanceTotal,
@@ -41,6 +45,9 @@ export function buildWorkflowRunEvidence(options: {
   flowRecords?: AccountFlowRecord[];
   terminalNode?: WorkflowNode;
   canvasSnapshot?: CanvasSnapshot;
+  assetSnapshotBefore?: AssetSnapshot;
+  assetSnapshotAfter?: AssetSnapshot;
+  matchedAssets?: AssetRecord[];
 }) {
   const balanceBefore = summarizeBalance(options.balanceBefore);
   const balanceAfter = summarizeBalance(options.balanceAfter);
@@ -76,6 +83,23 @@ export function buildWorkflowRunEvidence(options: {
           taskStatus: options.canvasSnapshot.taskStatus,
           nodeCount: options.canvasSnapshot.data.nodes.length,
           edgeCount: options.canvasSnapshot.data.edges.length,
+        }
+      : null,
+    assetLibrary: options.assetSnapshotAfter
+      ? {
+          assetType: options.assetSnapshotAfter.assetType,
+          totalBefore: options.assetSnapshotBefore?.total ?? null,
+          totalAfter: options.assetSnapshotAfter.total,
+          matchedAssetCount: options.matchedAssets?.length ?? 0,
+          matchedAssets:
+            options.matchedAssets?.map(asset => ({
+              id: asset.id,
+              fileUrl: asset.fileUrl,
+              coverUrl: asset.coverUrl,
+              createTime: asset.createTime,
+              sourceType: asset.sourceType ?? null,
+              canvasId: asset.canvasId ?? null,
+            })) ?? [],
         }
       : null,
   };

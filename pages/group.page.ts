@@ -1,7 +1,8 @@
-import { Page, Locator, expect } from '@playwright/test'
+import { Page, Locator, Response, expect } from '@playwright/test'
 
 export class GroupPage {
     readonly page: Page;
+    readonly main: Locator;
     readonly groupList: Locator;
     readonly addGroupButton: Locator;
     readonly chatInput: Locator;
@@ -17,12 +18,12 @@ export class GroupPage {
         this.groupList = page.getByRole('complementary');
         this.addGroupButton = this.groupList.getByRole('button').first();
 
-        const main = page.getByRole('main');
-        this.chatInput = main.getByRole('textbox').first();
-        this.sendButton = main.getByRole('button', { name: /发送/ }).first();
-        this.stopButton = main.getByRole('button', { name: /终止/ }).first();
-        this.newChatButton = main.getByText(/新建(对话|会话)/, { exact: true }).first();
-        this.messageList = main.locator('[data-message-id], [data-testid*="message"], [class*="message"]');
+        this.main = page.getByRole('main');
+        this.chatInput = this.main.getByRole('textbox').first();
+        this.sendButton = this.main.getByRole('button', { name: /发送/ }).first();
+        this.stopButton = this.main.getByRole('button', { name: /终止/ }).first();
+        this.newChatButton = this.main.getByText(/新建(对话|会话)/, { exact: true }).first();
+        this.messageList = this.main.locator('[data-message-id], [data-testid*="message"], [class*="message"]');
         this.lastMessage = this.messageList.last();
     }
 
@@ -35,6 +36,11 @@ export class GroupPage {
         const pattern = new RegExp(`${escaped}(\\s*\\(\\d+\\))?$`, 'i');
         const nameCell = this.groupList.locator('p, h5', { hasText: pattern }).first();
         return nameCell.locator('xpath=ancestor::div[.//button][1]');
+    }
+
+    private async resolveChatInput(): Promise<Locator> {
+        if (await this.chatInput.count()) return this.chatInput;
+        return this.main.locator('[contenteditable="true"], textarea, input[type="text"]').first();
     }
 
     async waitForReady(): Promise<void> {
@@ -50,8 +56,9 @@ export class GroupPage {
 
     async waitForChatReady(): Promise<void> {
         await expect(this.sendButton).toBeVisible({ timeout: 30000 });
-        await expect(this.sendButton).toBeEnabled({ timeout: 30000 });
-        await expect(this.chatInput).toBeEditable({ timeout: 30000 });
+        const input = await this.resolveChatInput();
+        await expect(input).toBeEditable({ timeout: 30000 });
+        await this.sendButton.waitFor({ state: 'enabled', timeout: 2000 }).catch(() => {});
     }
 
     async ensureGroupAvailable(name: string): Promise<void> {
@@ -97,13 +104,15 @@ export class GroupPage {
     async selectGroup(name: string): Promise<void> {
         const item = this.findGroupByName(name);
         await item.click();
-        await expect(this.chatInput).toBeVisible();
+        const input = await this.resolveChatInput();
+        await expect(input).toBeVisible();
     }
 
     async newChat(): Promise<void> {
         await expect(this.newChatButton).toBeVisible();
         await this.newChatButton.click({ force: true });
-        await expect(this.chatInput).toBeVisible();
+        const input = await this.resolveChatInput();
+        await expect(input).toBeVisible();
     }
 
     async waitForReplyStarted(opts?: { timeout?: number }): Promise<void> {
@@ -114,23 +123,80 @@ export class GroupPage {
         );
     }
 
-    async waitForReplyFinished(opts?: { timeout?: number }): Promise<void> {
+    private async captureReplyResponse(timeout = 15000): Promise<Response | null> {
+        return await this.page.waitForResponse(
+            res => this.streamUrlPattern.test(res.url()) && res.request().method() === 'POST',
+            { timeout }
+        ).catch(() => null);
+    }
+
+    private async waitForResponseFinished(response: Response | null, timeoutMs: number): Promise<void> {
+        if (!response) {
+            return;
+        }
+
+        await Promise.race([
+            response.finished().catch(() => null),
+            new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('等待群组回复流结束超时')), timeoutMs);
+            }),
+        ]).catch(() => undefined);
+    }
+
+    async waitForReplyFinished(opts?: { timeout?: number; response?: Response | null }): Promise<void> {
         const timeout = opts?.timeout ?? 60000;
         const start = Date.now();
         const remaining = () => Math.max(500, timeout - (Date.now() - start));
+        const uiRecoveryTimeout = () => Math.min(30000, Math.max(2000, remaining()));
+        const responseFinishedTimeout = Math.min(
+            Math.max(30000, Math.floor(timeout / 2)),
+            Math.max(30000, timeout - 10000),
+        );
+
+        await this.waitForResponseFinished(opts?.response ?? null, responseFinishedTimeout);
 
         await this.stopButton.waitFor({ state: 'visible', timeout: remaining() }).catch(() => {});
-        await expect(this.sendButton).toBeVisible({ timeout: remaining() });
-        await expect(this.sendButton).toBeEnabled({ timeout: remaining() }).catch(() => {});
+        await this.stopButton.waitFor({ state: 'hidden', timeout: remaining() }).catch(() => {});
+        await this.sendButton.waitFor({ state: 'visible', timeout: remaining() }).catch(() => {});
+        try {
+            await expect(this.sendButton).toBeEnabled({ timeout: uiRecoveryTimeout() });
+        } catch {
+            const input = await this.resolveChatInput();
+            await expect(input).toBeEditable({ timeout: uiRecoveryTimeout() });
+        }
     }
 
-    async sendMessage(text: string): Promise<void> {
+    async sendMessage(text: string): Promise<Response | null> {
         await this.waitForChatReady();
-        await this.chatInput.fill('');
-        await this.chatInput.fill(text);
+        const input = await this.resolveChatInput();
+        await input.fill('');
+        await input.fill(text);
+        await expect(this.sendButton).toBeEnabled({ timeout: 10000 });
+        const responsePromise = this.captureReplyResponse(15000);
         await Promise.all([
-            this.waitForReplyStarted({ timeout: 15000 }).catch(() => {}),
+            responsePromise,
             this.sendButton.click()
         ]);
+        return await responsePromise;
+    }
+
+    async sendMessageInOngoingChat(text: string): Promise<Response | null> {
+        await expect(this.sendButton).toBeVisible({ timeout: 30000 });
+        const input = await this.resolveChatInput();
+        await expect(input).toBeEditable({ timeout: 30000 });
+        await input.fill('');
+        await input.fill(text);
+        await expect(this.sendButton).toBeEnabled({ timeout: 10000 });
+        const responsePromise = this.captureReplyResponse(15000);
+        await Promise.all([
+            responsePromise,
+            this.sendButton.click()
+        ]);
+        return await responsePromise;
+    }
+
+    async sendAndWaitReply(text: string, opts?: { timeout?: number }): Promise<void> {
+        const response = await this.sendMessage(text);
+        await this.waitForReplyFinished({ ...opts, response });
     }
 }

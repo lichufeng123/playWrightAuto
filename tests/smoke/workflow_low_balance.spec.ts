@@ -1,4 +1,5 @@
 import { expect, test } from '@playwright/test';
+import { AssetFlow } from '../../flows/asset.flow';
 import { hasNodeOutput } from '../../api/task.api';
 import { BillingFlow } from '../../flows/billing.flow';
 import { WorkflowFlow } from '../../flows/workflow.flow';
@@ -25,6 +26,8 @@ test.describe('工作流低余额拦截', () => {
 
       const billingFlow = new BillingFlow(workflowFlow.billingApi);
       const billingSnapshotBefore = await billingFlow.captureSnapshot();
+      const assetFlow = new AssetFlow(workflowFlow.assetApi);
+      const assetSnapshotBefore = await assetFlow.captureSnapshot('image');
       const node = await workflowFlow.addNode(workflowBillingCases.imageSingleInvokePreDeduct);
 
       expect(
@@ -39,8 +42,8 @@ test.describe('工作流低余额拦截', () => {
         /余额不足|赛点不足|余额不够|赛点不够/,
       );
 
-      await workflowFlow.workflowPage.nodePanel.waitForInsufficientBalanceDialog(8_000);
-      const dialogText = await workflowFlow.workflowPage.nodePanel.readInsufficientBalanceDialogText();
+      await workflowFlow.waitForInsufficientBalanceDialog(8_000);
+      const dialogText = await workflowFlow.readInsufficientBalanceDialogText();
       expect(dialogText).toMatch(/余额为40赛点|余额不足|请先充值/);
 
       const balanceAfter = await billingFlow.assertBalanceUnchanged(
@@ -54,6 +57,12 @@ test.describe('工作流低余额拦截', () => {
       const blockedNode = await workflowFlow.taskApi.getNode(canvasId, node.nodeId);
       expect(blockedNode.data.taskInfo?.taskId ?? '').toBe('');
       expect(hasNodeOutput(blockedNode)).toBeFalsy();
+      const assetResult = await assetFlow.assertNoNewAssetsSince(
+        assetSnapshotBefore,
+        record => record.sourceType === 'workflow' && record.canvasId === canvasId,
+        8_000,
+      );
+      expect(assetResult.matchedAssets).toHaveLength(0);
 
       const canvasSnapshot = await workflowFlow.captureCanvasSnapshot('低余额拦截-画布快照', canvasId);
       await workflowFlow.logger.attachJson(
@@ -71,6 +80,9 @@ test.describe('工作流低余额拦截', () => {
           flowRecords: newFlowRecords,
           terminalNode: blockedNode,
           canvasSnapshot,
+          assetSnapshotBefore,
+          assetSnapshotAfter: assetResult.snapshot,
+          matchedAssets: assetResult.matchedAssets,
         }),
       );
       await workflowFlow.logger.attachJson('低余额拦截-响应详情', {

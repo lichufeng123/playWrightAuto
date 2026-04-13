@@ -1,6 +1,8 @@
 import { expect, test } from '@playwright/test';
+import { resolveAssetKindByNodeType } from '../../api/asset.api';
 import { getBalanceTotal } from '../../api/billing.api';
 import { getNodeTaskStatus } from '../../api/task.api';
+import { AssetFlow } from '../../flows/asset.flow';
 import { BillingFlow } from '../../flows/billing.flow';
 import { WorkflowFlow } from '../../flows/workflow.flow';
 import { workflowBillingCases, workflowTimeouts } from '../data/workflow.data';
@@ -22,6 +24,10 @@ test.describe('工作流计费', () => {
 
         const billingFlow = new BillingFlow(workflowFlow.billingApi);
         const billingSnapshotBefore = await billingFlow.captureSnapshot();
+        const assetType = resolveAssetKindByNodeType(billingCase.nodeType);
+        expect(assetType).toBeTruthy();
+        const assetFlow = new AssetFlow(workflowFlow.assetApi);
+        const assetSnapshotBefore = await assetFlow.captureSnapshot(assetType!);
 
         const node = await workflowFlow.addNode(billingCase);
         const invoke = await workflowFlow.runSelectedNode(billingCase.clickCount);
@@ -30,7 +36,7 @@ test.describe('工作流计费', () => {
         expect(invoke.taskId).toBeGreaterThan(0);
 
         if (billingCase.expectRunLockedDuringExecution) {
-          await workflowFlow.workflowPage.nodePanel.expectRunLocked();
+          await workflowFlow.expectRunLocked();
         }
 
         const acceptedNode = await workflowFlow.taskApi.waitForNodeTaskId(
@@ -47,6 +53,35 @@ test.describe('工作流计费', () => {
           workflowTimeouts.nodeExecutionMs,
         );
         expect(getNodeTaskStatus(successNode)).toBe('success');
+
+        const productUrls = Array.isArray(successNode.data.product)
+          ? successNode.data.product
+              .map(product => {
+                if (
+                  product &&
+                  typeof product === 'object' &&
+                  'value' in product &&
+                  typeof (product as { value?: unknown }).value === 'string'
+                ) {
+                  return (product as { value: string }).value;
+                }
+                return '';
+              })
+              .filter(Boolean)
+          : [];
+        expect(productUrls.length).toBeGreaterThan(0);
+
+        const assetResult = await assetFlow.waitForNewAssetsSince(
+          assetSnapshotBefore,
+          record => record.canvasId === canvasId && productUrls.includes(record.fileUrl),
+          {
+            timeoutMs: workflowTimeouts.assetMs,
+            minCount: productUrls.length,
+            pageSize: Math.max(15, productUrls.length + 5),
+          },
+        );
+        expect(assetResult.matchedAssets).toHaveLength(productUrls.length);
+        await workflowFlow.expectAssetLibraryContainsUrls(assetType!, productUrls, workflowTimeouts.assetMs);
 
         const balanceAfter = await billingFlow.waitForBalanceDelta(
           billingSnapshotBefore.balance,
@@ -93,6 +128,9 @@ test.describe('工作流计费', () => {
             flowRecords: newFlowRecords,
             terminalNode: successNode,
             canvasSnapshot,
+            assetSnapshotBefore,
+            assetSnapshotAfter: assetResult.snapshot,
+            matchedAssets: assetResult.matchedAssets,
           }),
         );
       } finally {
