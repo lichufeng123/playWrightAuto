@@ -1,161 +1,179 @@
 # Playwright UI 自动化测试工程
 
-这是一个基于 **Playwright + TypeScript** 的 UI 自动化测试项目，旨在构建一个**工程化、高可维护、支持并行执行**的自动化测试框架。
+这是一个基于 **Playwright + TypeScript** 的 UI 自动化项目，当前重点覆盖 3 类业务：
 
-## 🛠 技术栈
+- `AI员工`
+- `AI群组`
+- `Workflow`
 
-- **Core**: [Playwright](https://playwright.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Pattern**: Page Object Model (POM)
-- **Runner**: Playwright Test Runner (Parallel Execution)
+项目目标不是堆脚本，而是把 UI 触发、页面交互、业务编排、接口校验、证据输出收成一套能持续维护的工程化框架。
 
-## 📂 项目结构
+## 技术栈
 
-```
+- Core: [Playwright](https://playwright.dev/)
+- Language: [TypeScript](https://www.typescriptlang.org/)
+- Runner: Playwright Test
+- Pattern: `Page Object + Flow + API + Test Data`
+
+## 当前目录结构
+
+```text
 PlayWright_Demo/
-├── auth/                   # 认证相关 (Global Setup/Storage State)
-├── data/                   # 测试数据
-├── pages/                  # Page Object 页面对象层 (只封装元素和操作)
-│   ├── login.page.ts       # 登录页
-│   ├── home.page.ts        # 首页
-│   ├── squeeze.page.ts     # 业务承接页
-│   └── agent.page.ts       # AI 员工模块页
-├── tests/                  # 测试用例层 (只负责业务流程和断言)
-│   ├── auth/               # 认证测试
-│   ├── smoke/              # 冒烟测试
-│   └── ...
-├── playwright.config.ts    # Playwright 配置文件
-└── package.json            # 依赖管理
+├── auth/                       # 登录态构建、global setup
+├── api/                        # 业务接口封装（任务、计费、资产等）
+├── components/                 # 可复用页面局部组件
+├── flows/                      # 业务编排层
+├── pages/                      # 页面对象层
+├── tests/
+│   ├── data/                   # 测试数据
+│   ├── helpers/                # 导航与辅助方法
+│   └── smoke/                  # 冒烟与高价值回归场景
+├── utils/                      # 通用等待、重试、日志、证据能力
+├── docs/                       # 项目文档与交接材料
+├── playwright.config.ts
+└── package.json
 ```
 
-## ✨ AI 员工测试专项 (AI Agent Testing)
+## 核心模块
 
-本项目针对 AI 员工模块构建了深度增强的自动化能力：
+### 1. AI 员工
 
-### 1. 强力环境清理 (Strict Cleanup)
-- **双重完成判定**：清理逻辑必须同时满足“看到已加载全部”标志位且“列表中仅剩下预置锚点”才会退出，极大提升了环境幂等性。
-- **自动去重**：自动识别并删除由于并发或重命名产生的重复员工副本（如 `员工名(1)`）。
-- **滚动加载支持**：内置侧边栏自动滚动逻辑，可处理大型员工列表的懒加载。
+相关文件：
 
-### 2. 批量消息发送能力 (Batch Messaging)
-- **多维度覆盖**：支持对 29+ 员工进行参数化测试。
-- **业务提示词映射**：根据员工类型（视频/图片/PPT/美工）自动匹配最高质量的业务 Prompts。
-- **性能优化**：通过检测 `stopButton` (终止按钮) 出现即判定发送成功，将单个生成类用例耗时缩短 80% 以上。
+- [agent.page.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/pages/agent.page.ts)
+- [agent.spec.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/smoke/agent.spec.ts)
+- [agents.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/data/agents.ts)
 
-### 3. 自愈与鲁棒性 (Self-Healing & Resilience)
-- **自愈式添加**：`ensureAgentAvailable` 逻辑在发现目标员工缺失时，会自动触发搜索并从弹窗添加，确保测试链不中断。
-- **Dialog 状态跟踪**：优化了弹窗式 UI 的交互，使用精确匹配和稳定等待策略，解决了复杂表单下的点击冲突。
-- **账户余额监测**：内置“赛点余额不足”检测，能自动识别由于资产原因导致的生成失败并抛出清晰异常。
+当前能力：
 
-### 4. 视觉化管理与报告 (Reporting)
-- **自动化快照**：批量测试运行后，会自动在 `test-results/batch-screenshots/` 下生成以员工命名的全屏截图，方便直观校验 UI 渲染效果。
-- **隔离执行策略**：通过 worker 隔离确保并行执行时数据不冲突，大幅提升 CI 效率。
+- 员工缺失时自动补齐
+- 批量发送业务提示词
+- 多轮对话发送与回复完成等待
+- 图片类员工张数切换
+- 历史、清理、置顶、重命名、删除等管理场景
 
-## 📐 设计原则 (Design Principles)
+### 2. AI 群组
 
-本项目严格遵循以下设计原则，贡献代码时请务必遵守：
+相关文件：
 
-### 1. Page Object 职责单一
-Page Object **只封装**：
-- 页面结构定义 (Locators)
-- 原子操作方法 (如 `click`, `fill`, `select`)
-- 页面级/组件级的状态等待 (`waitForReady`)
+- [group.page.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/pages/group.page.ts)
+- [group.spec.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/smoke/group.spec.ts)
+- [group.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/data/group.ts)
 
-**❌ 禁止在 Page Object 中编写业务断言 (Assertions)**。断言应始终保留在 Spec 文件中。
+当前能力：
 
-### 2. Spec 文件职责
-Spec 文件 **只负责**：
-- 组合业务流程
-- 调用 Page Object 提供的方法
-- 执行业务结果断言
+- 4 个策略群组的数据驱动长 prompt 发送
+- 两轮对话链路：`业务 prompt -> 等回复完成 -> 发送“确认” -> 再等回复完成`
+- 串行 `batch messaging`
+- 四群组并发发送 `parallel messaging`
+- 群组缺失时自动补齐
 
-### 3. 并行执行 (Parallelism First)
-- 所有 Test Case 必须设计为**独立运行**。
-- 禁止 Test Case 之间存在数据依赖或执行顺序依赖。
-- 每个 Test 需自行负责 Setup (如 `enterAgentPage` 辅助函数)。
+### 3. Workflow
 
-### 4. 动态页面处理
-对于 SPA (单页应用) 和动态加载内容：
-- 区分 **Page Ready** (页面加载完成) 与 **Business Ready** (业务操作生效)。
-- 使用显式等待 (如 `waitForResponse`, `expect(locator).toBeVisible()`)，避免硬编码 `waitForTimeout`。
+相关文件：
 
-### 5. 元素定位策略
-- **Scoped Locators**: 优先使用容器级定位 (如 `page.getByRole('complementary').getByText(...)`)，减少全局查找冲突。
-- **Resilient Selectors**: 优先使用面向用户的定位方式 (Role, Text, Label)，避免 CSS/XPath 依赖 DOM 结构。
+- [workflow.flow.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/flows/workflow.flow.ts)
+- [workflow.editor.page.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/pages/workflow.editor.page.ts)
+- [node.panel.page.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/pages/node.panel.page.ts)
+- [workflow_smoke.spec.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/smoke/workflow_smoke.spec.ts)
+- [workflow_billing.spec.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/smoke/workflow_billing.spec.ts)
+- [workflow_failure.spec.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/smoke/workflow_failure.spec.ts)
+- [workflow_low_balance.spec.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/smoke/workflow_low_balance.spec.ts)
 
-## 🚀 快速开始
+当前能力：
+
+- 组件层 -> 页面层 -> 业务编排层 -> 用例层 的分层结构
+- 图片节点主流程 smoke
+- 计费扣减 / 快速点击幂等 / 低余额拦截 / 失败返还
+- 任务 API、计费 API、资产库 API 联合校验
+- 生成产物入库校验，支持“成功有新增 / 失败或拦截不新增”
+
+## 设计原则
+
+### 1. Page / Component 只做交互，不做业务断言
+
+- `pages/` 与 `components/` 负责定位、原子操作、页面级等待
+- 业务断言尽量放在 spec 或 flow 中完成
+
+### 2. Flow 负责业务编排
+
+- `flows/` 负责把 UI 操作、接口校验、日志证据串成完整业务动作
+- Spec 不直接碰底层 selector
+
+### 3. 数据驱动优先
+
+- 测试数据优先收敛在 `tests/data/`
+- Prompt、群组名、员工名、workflow 场景参数不要散写在 spec 各处
+
+### 4. 等条件，不等时间
+
+- 优先使用 `expect(...)`、`waitForResponse(...)`、轮询等显式等待
+- `waitForTimeout` 只作为动画/状态切换的小缓冲，不当主逻辑
+
+### 5. 并行与串行分开设计
+
+- 需要共享上下文、容易互相污染的链路，用 `serial`
+- 适合隔离运行的链路，再明确放到 `parallel`
+
+## 快速开始
 
 ### 安装依赖
+
 ```bash
 npm install
 ```
 
-### 运行测试
-运行所有测试 (并行模式)：
+### 常用命令
+
 ```bash
-# 运行所有测试
+# 全量运行
 npx playwright test
 
-# 运行 AI 员工批量发送消息测试 (串行以保证稳定性)
+# AI 员工批量消息
 npm run test:batch
 
-# 生成批量测试截图报告
-npm run report:batch
-```
+# AI 群组
+npx playwright test tests/smoke/group.spec.ts --project=chromium
 
-查看通用测试报告：
-```bash
+# Workflow 主流程
+npx playwright test tests/smoke/workflow_smoke.spec.ts --project=chromium
+
+# 查看报告
 npx playwright show-report
 ```
 
-## 🌍 环境与账号切换 (Smooth Switching)
+## 环境与账号切换
 
-为避免“切到正式环境但登录态仍来自测试环境”的坑，本项目将 **BaseURL / 登录账号 / StorageState** 做了统一收敛：
-- 通过环境变量切换环境与账号
-- 登录态按“环境 + 账号”缓存到 `playwright/.auth/`，互不干扰
+本项目把 `BaseURL / 登录账号 / storageState` 做了统一收敛，避免切环境后还复用错登录态。
 
-实现原理与代码位置说明见：`docs/ENV_AND_AUTH.md`
+详细说明见：
 
-### 1) 切换环境
+- [ENV_AND_AUTH.md](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/docs/ENV_AND_AUTH.md)
+- [切换账号.md](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/docs/切换账号.md)
 
-- 测试环境 (默认)：`PW_ENV=test` → `https://test-base-platform.insight-aigc.com`
-- 正式环境：`PW_ENV=prod` → `https://base-platform.insight-aigc.com`
-- 自定义：直接设置 `BASE_URL`（优先级最高）
+常用环境变量：
 
-也支持使用 `.env`：在项目根目录创建 `.env` 写入上述变量；或通过 `ENV_FILE` 指定不同文件（如 `.env.prod`）。
-
-推荐命令：
-```bash
-# 正式环境跑全量
-npm run test:ui:prod
-
-# Open Playwright UI (prod)
-npm run ui:prod
-
-# 正式环境跑批量发送（串行）
-npm run test:batch:prod
-```
-
-### 2) 切换账号
-
-- `PW_USER`: `testUser`(测试环境默认) | `prodUser`(正式环境默认)
-- 或使用 `LOGIN_PHONE` + `LOGIN_CODE` 覆盖登录账号（更灵活）
+- `PW_ENV=test|prod`
+- `PW_USER=testUser|prodUser|lowBalanceUser`
+- `BASE_URL`
+- `PW_REFRESH_STATE=1`
 
 PowerShell 示例：
+
 ```powershell
 $env:PW_ENV = 'prod'
 $env:PW_USER = 'prodUser'
 npx playwright test
 ```
 
-### 3) 强制刷新登录态
+## 推荐阅读
 
-当缓存的登录态失效时：
-```bash
-npm run test:ui:prod:refresh
-```
+- [AGENT_TEST_OVERVIEW.md](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/docs/AGENT_TEST_OVERVIEW.md)
+- [AI_AGENT_AUTOMATION_GUIDE.md](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/docs/AI_AGENT_AUTOMATION_GUIDE.md)
+- [workflow-refactor-handoff.md](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/docs/workflow-refactor-handoff.md)
+- [UI 自动化中的分层设计.md](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/docs/UI 自动化中的分层设计.md)
 
-## ⚠️ 注意事项
+## 说明
 
-- **AI 员工模块**：该模块包含动态 DOM 结构，定位时请使用 `AgentPage` 中提供的动态定位方法 (如 `agentItemByName`)。
-- **环境配置**：默认 `PW_ENV=test`，切换正式环境用 `PW_ENV=prod` 或直接设置 `BASE_URL`。
+- `docs/workflow-refactor-handoff.md` 与 `docs/workflow-automation-plan.md` 属于历史交接/规划文档，保留时间线，不按“当前实现快照”去强行改写。
+- 当前仓库是长期演进中的自动化工程，不要只盯某一个 spec 文件理解全局，优先从 README、`docs/` 和 `tests/data/` 建上下文。

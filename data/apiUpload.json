@@ -1,0 +1,1129 @@
+[
+{
+        "trace_id": "db7abfa2-bcd9-4653-84ef-c6b1f2e09585",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 87.25619411468506,
+        "data": {
+                "model_id": "ltx-2.3",
+                "model_provider": "Fal",
+                "gen_type": "video",
+                "task_type": "text_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1440p",
+                                "duration": 10
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20224,
+        "node_id": "965d28ee-6b22-44df-b40d-0fee70a8a28f"
+},
+{
+        "trace_id": "e379b362-259f-4992-b220-445e7a981c53",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 69.91101813316345,
+        "data": {
+                "model_id": "ltx-2.3",
+                "model_provider": "Fal",
+                "gen_type": "video",
+                "task_type": "text_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080p",
+                                "duration": 6
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20223,
+        "node_id": "6f724523-1e57-4024-a946-a6e60eee2b07"
+},
+{
+        "trace_id": "fdb90aec-24ad-4cdd-bb77-6706d32154cb",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 95.98399877548218,
+        "data": {
+                "model_id": "wan2.6-r2v-flash",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "reference_image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "duration": 8
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20231,
+        "node_id": "dcc6f923-8e01-473a-aa90-c5ba9db613e9"
+},
+{
+        "trace_id": "47de0cab-fce3-4a66-bb97-2e2f4cc1d2cd",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 69.63251090049744,
+        "data": {
+                "model_id": "wan2.6-r2v-flash",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "reference_image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "duration": 5
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20230,
+        "node_id": "965d28ee-6b22-44df-b40d-0fee70a8a28f"
+},
+{
+        "trace_id": "9d3eba3b-f432-4dcd-b3e7-28b12b781a4c",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 95.73942160606384,
+        "data": {
+                "model_id": "wan2.6-t2v",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "text_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "duration": 8
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20235,
+        "node_id": "2e9b6d8a-f50c-45c2-9b1e-b4be667b745b"
+},
+{
+        "trace_id": "38242fe6-b77c-402a-9243-8eb9692a0c33",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 53.25435423851013,
+        "data": {
+                "model_id": "wan2.6-t2v",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "text_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "duration": 5
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20234,
+        "node_id": "a51a62f3-6aeb-448f-a903-9734ae095027"
+},
+{
+        "trace_id": "68f6b77e-786f-49d2-8456-b63d632a52b4",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 76.90571904182434,
+        "data": {
+                "model_id": "wan2.6-i2v",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "duration": 8
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20233,
+        "node_id": "e025859d-1d66-4805-b2ba-de2de0b7e0db"
+},
+{
+        "trace_id": "7dad4392-cd49-4179-8978-3ad17cc85a9c",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 86.7314772605896,
+        "data": {
+                "model_id": "wan2.6-i2v",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "duration": 8
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20238,
+        "node_id": "a1b8909a-fdf4-426b-b447-03c1df65bb14"
+},
+{
+        "trace_id": "4cc72fab-d61b-4644-9ac4-028f1b28a5be",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 296.533118724823,
+        "data": {
+                "model_id": "wan2.5-i2v-preview",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "duration": 10
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20240,
+        "node_id": "a1b8909a-fdf4-426b-b447-03c1df65bb14"
+},
+{
+        "trace_id": "354c7524-7019-4a5c-a36f-81045246bf26",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 139.46035170555115,
+        "data": {
+                "model_id": "wan2.5-i2v-preview",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "duration": 5
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20240,
+        "node_id": "e025859d-1d66-4805-b2ba-de2de0b7e0db"
+},
+{
+        "trace_id": "77cde9bc-dcc6-4b68-9f67-2921e79cfab8",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 273.408908367157,
+        "data": {
+                "model_id": "wan2.5-t2v-preview",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "text_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "duration": 10
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20240,
+        "node_id": "2e9b6d8a-f50c-45c2-9b1e-b4be667b745b"
+},
+{
+        "trace_id": "ce49d05d-5bae-4c12-beb8-e16556d261c0",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 132.41793370246887,
+        "data": {
+                "model_id": "wan2.5-t2v-preview",
+                "model_provider": "阿里",
+                "gen_type": "video",
+                "task_type": "text_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "duration": 5
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 2019,
+        "task_id": 20240,
+        "node_id": "a51a62f3-6aeb-448f-a903-9734ae095027"
+},
+{
+        "trace_id": "1920657f-de1c-459b-80e0-cfdcae84a1ba",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 103.75769567489624,
+        "data": {
+                "model_id": "fal-ai/qwen-image-layered",
+                "model_provider": "Fal",
+                "gen_type": "tool",
+                "task_type": "tool",
+                "gen_count": 1,
+                "output": {
+                        "image": {
+                                "width": "832",
+                                "height": "480",
+                                "layer_num": 2
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": -1,
+        "node_id": "b75880b6-9c37-4019-8643-c15e6a822f61"
+},
+{
+        "trace_id": "41d6dbb1-75b7-47e4-806b-6babc8d06a45",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 18.58102321624756,
+        "data": {
+                "model_id": "fal-ai/seedvr/upscale/image",
+                "model_provider": "Fal",
+                "gen_type": "tool",
+                "task_type": "tool",
+                "gen_count": 1,
+                "output": {
+                        "image": {
+                                "width": "4096",
+                                "height": "2352"
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": "7b6df066902348e58b9ede781e9ccd0f",
+        "node_id": "0ef2b2aa-d4d1-4cb2-ae62-d39368037b37"
+},
+{
+        "trace_id": "c83e3079-2993-43f0-b727-ba73cee43d4e",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 24.506967306137085,
+        "data": {
+                "model_id": "fal-ai/qwen-image-layered",
+                "model_provider": "Fal",
+                "gen_type": "tool",
+                "task_type": "tool",
+                "gen_count": 1,
+                "output": {
+                        "image": {
+                                "resolution": "832x480",
+                                "layer_num": 2
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": -1,
+        "node_id": "b75880b6-9c37-4019-8643-c15e6a822f61"
+},
+{
+        "trace_id": "a80e7803-4643-4b71-a78a-5717b2a1f722",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 20.97106957435608,
+        "data": {
+                "model_id": "fal-ai/seedvr/upscale/image",
+                "model_provider": "Fal",
+                "gen_type": "tool",
+                "task_type": "tool",
+                "gen_count": 1,
+                "output": {
+                        "image": {
+                                "resolution": "4096x2352"
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": "612637511e5242bdaf15ca0e3e1f074e",
+        "node_id": "0ef2b2aa-d4d1-4cb2-ae62-d39368037b37"
+},
+{
+        "trace_id": "81b96ddf-aa39-4adc-8eab-e8584cd6a71f",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 11.983562707901001,
+        "data": {
+                "model_id": "fal-ai/qwen-image-edit-2511-multiple-angles",
+                "model_provider": "Fal",
+                "gen_type": "tool",
+                "task_type": "tool",
+                "gen_count": 1,
+                "output": {
+                        "image": {
+                                "resolution": "1344x768"
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": "0",
+        "node_id": "a9a6f215-49c2-4882-992c-88f986dc8936"
+},
+{
+        "trace_id": "a083f413-f605-4243-b57a-006cade23ec3",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 2.214703321456909,
+        "data": {
+                "model_id": "flux-2-klein-4b-edit-lora",
+                "model_provider": "Fal",
+                "gen_type": "image",
+                "task_type": "image_editing",
+                "gen_count": 1,
+                "output": {
+                        "image": {
+                                "resolution": "768x1376"
+                        }
+                },
+                "input": {
+                        "image": {
+                                "resolution": "1344x768"
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": -1,
+        "node_id": "53d8948d-35f7-477d-9484-95e59ac45fde"
+},
+{
+        "trace_id": "a900f484-311c-4a59-8f1f-4ab04ad86131",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 117.94762110710144,
+        "data": {
+                "model_id": "fal-ai/seedvr/upscale/video",
+                "model_provider": "Fal",
+                "gen_type": "tool",
+                "task_type": "tool",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1936x1088",
+                                "frame_count": 122
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": "100431",
+        "canvas_id": "1114",
+        "task_id": "08f543ff89854fc9b3e638ee8fae9646",
+        "node_id": "dc627ce9-a57d-4129-adfe-e53f62457003"
+},
+{
+        "trace_id": "d9fc54fb-b783-4324-8adc-b0c14ce53e36",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 203.63188338279724,
+        "data": {
+                "model_id": "viduq2-pro",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": null,
+                                "duration": 5,
+                                "has_audio": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20311,
+        "node_id": "0280ea78-9b43-48ca-8c35-3d7a6a5b6216"
+},
+{
+        "trace_id": "dbf88e74-0369-4bd3-97a3-53f1865f6382",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 48.64475870132446,
+        "data": {
+                "model_id": "viduq2-turbo",
+                "model_provider": "生数科技",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720p",
+                                "ratio": null,
+                                "duration": 5
+                        }
+                },
+                "total_price": {
+                        "value": 40,
+                        "type": "credit"
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20313,
+        "node_id": "49a65cc9-b921-4f9d-9313-7ec597353525"
+},
+{
+        "trace_id": "28ef45fb-cada-494b-8ffa-5a7652b9c1f0",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 281.74967217445374,
+        "data": {
+                "model_id": "viduq2-pro",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": null,
+                                "duration": 8,
+                                "has_audio": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20312,
+        "node_id": "7e7cedd5-e599-4211-9274-61c61c8f5e86"
+},
+{
+        "trace_id": "c7b26ad8-20d9-4901-bd99-ecd64e5dac89",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 48.122947692871094,
+        "data": {
+                "model_id": "viduq2-turbo",
+                "model_provider": "生数科技",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080p",
+                                "ratio": null,
+                                "duration": 8
+                        }
+                },
+                "total_price": {
+                        "value": 105,
+                        "type": "credit"
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20316,
+        "node_id": "9ab1714b-f83b-48fe-9e9e-33ee0a3f4a95"
+},
+{
+        "trace_id": "94be6273-0c6b-4011-b066-27654f5fc640",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 165.0937626361847,
+        "data": {
+                "model_id": "viduq2-pro",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "first_last_frame_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": null,
+                                "duration": 5,
+                                "has_audio": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20314,
+        "node_id": "25c8524b-b361-4ccc-8594-2e8eee9ecca0"
+},
+{
+        "trace_id": "8498232c-4c2f-45fa-857d-491dad31d3a4",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 207.54365754127502,
+        "data": {
+                "model_id": "viduq2-pro",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "first_last_frame_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": null,
+                                "duration": 8,
+                                "has_audio": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20315,
+        "node_id": "cabf2b27-719c-4927-8a30-6a96c76f2f28"
+},
+{
+        "trace_id": "8de8b712-90dd-4d94-b495-20fb6d2893ef",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 59.866008043289185,
+        "data": {
+                "model_id": "Kling-3.0",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": null,
+                                "duration": 5,
+                                "has_audio": false
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20317,
+        "node_id": "a7a84205-7fce-4771-bf4f-c8b389831c9c"
+},
+{
+        "trace_id": "c37f110b-0a0e-4a61-ad3b-b5aeab28357b",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 181.62126183509827,
+        "data": {
+                "model_id": "Kling-3.0",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": null,
+                                "duration": 8,
+                                "has_audio": false
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20318,
+        "node_id": "d95023d5-e347-4453-8299-42221dd53664"
+},
+{
+        "trace_id": "3c1bb461-438b-43cb-81fd-bcd6523d9e0f",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 59.63316583633423,
+        "data": {
+                "model_id": "Kling-3.0",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": null,
+                                "duration": 5,
+                                "has_audio": true
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20320,
+        "node_id": "cc62a5a6-9ab5-48bb-8999-e653ea6b23af"
+},
+{
+        "trace_id": "fd91cd72-8bcc-4e89-abf7-c2e896ec247f",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 170.60588431358337,
+        "data": {
+                "model_id": "Kling-3.0",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": null,
+                                "duration": 8,
+                                "has_audio": true
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20321,
+        "node_id": "5e68a120-e723-40cc-ac5d-3cee5d944b66"
+},
+{
+        "trace_id": "acd2d222-ec28-4020-b322-57b484923ccf",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 65.920405626297,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": null,
+                                "duration": 5,
+                                "has_audio": false
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20322,
+        "node_id": "f5f68aa0-1fa7-40da-a070-7a6af6b9dde7"
+},
+{
+        "trace_id": "01e58824-b2a0-4a78-85f7-b0304592ff26",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 254.47018194198608,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": null,
+                                "duration": 8,
+                                "has_audio": false
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20323,
+        "node_id": "85472cda-2186-41fe-a3b6-8661604a135e"
+},
+{
+        "trace_id": "219f6c74-1676-4843-b502-9396e0129215",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 59.43819499015808,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": null,
+                                "duration": 5,
+                                "has_audio": true
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20324,
+        "node_id": "af0bb06a-cdbc-49ec-8b94-4129caa78af6"
+},
+{
+        "trace_id": "4effebb7-7f62-4ccf-bee9-f575b63058f2",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 181.32611060142517,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": null,
+                                "duration": 8,
+                                "has_audio": true
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20325,
+        "node_id": "61dd8b1c-ec9e-49b1-bd4d-9bccc27b1b15"
+},
+{
+        "trace_id": "18bd29c3-a8fc-4a44-987f-ae5fa1bb6169",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 75.8079924583435,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "reference_image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": "16:9",
+                                "duration": 5,
+                                "has_audio": false
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20326,
+        "node_id": "ff6f5a8b-1641-4702-80d6-516b8c89b050"
+},
+{
+        "trace_id": "f14a0a28-fe84-4f23-bc84-72b91461da23",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 159.0909378528595,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "reference_image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": "16:9",
+                                "duration": 8,
+                                "has_audio": false
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20327,
+        "node_id": "2f19dd92-b830-4b7c-8f77-dd444abab3f9"
+},
+{
+        "trace_id": "3d165ac1-7bcb-4bf5-b71b-8efd6e53f945",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 80.23393487930298,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "reference_image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720P",
+                                "ratio": "16:9",
+                                "duration": 5,
+                                "has_audio": true
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20328,
+        "node_id": "e66a9f6e-60c1-4c56-b5e8-b98f5a0b5d33"
+},
+{
+        "trace_id": "94b6b2c3-4805-4924-85d8-46c4868f7ccb",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 176.2510850429535,
+        "data": {
+                "model_id": "Kling-3.0-Omni",
+                "model_provider": "腾讯",
+                "gen_type": "video",
+                "task_type": "reference_image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080P",
+                                "ratio": "16:9",
+                                "duration": 8,
+                                "has_audio": true
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20329,
+        "node_id": "4100f436-6d36-4329-85c1-6593dc7e89b3"
+},
+{
+        "trace_id": "ae570f31-7b42-4e28-8f57-8fd6e2a8cb0f",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 72.3566997051239,
+        "data": {
+                "model_id": "doubao-seedance-1-5-pro-251215",
+                "model_provider": "字节跳动",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720p",
+                                "ratio": "16:9",
+                                "duration": 5,
+                                "token": 108900,
+                                "has_audio": true,
+                                "enable_ref_video": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20332,
+        "node_id": "2dc925ed-d376-4fcc-9cd0-547ec785b7ca"
+},
+{
+        "trace_id": "cee3807b-134a-486d-9a55-e8d1395bd8ed",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 120.85964512825012,
+        "data": {
+                "model_id": "doubao-seedance-1-5-pro-251215",
+                "model_provider": "字节跳动",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080p",
+                                "ratio": "16:9",
+                                "duration": 8,
+                                "token": 390825,
+                                "has_audio": true,
+                                "enable_ref_video": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20333,
+        "node_id": "eb767c8d-7daf-427f-9e78-9975dba91ead"
+},
+{
+        "trace_id": "d7250689-eef2-4b34-b1d7-f3ec29452ef0",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 50.79641389846802,
+        "data": {
+                "model_id": "doubao-seedance-1-5-pro-251215",
+                "model_provider": "字节跳动",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "720p",
+                                "ratio": "16:9",
+                                "duration": 4,
+                                "token": 87300,
+                                "has_audio": false,
+                                "enable_ref_video": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20334,
+        "node_id": "1141628e-0672-48f6-892f-ed7ed4d48959"
+},
+{
+        "trace_id": "8d0d6574-20dc-4ff2-bf92-6d6c673a1cbf",
+        "api_key_name": "",
+        "status": "success",
+        "err_code": 0,
+        "err_msg": "",
+        "cost_time": 108.20412564277649,
+        "data": {
+                "model_id": "doubao-seedance-1-5-pro-251215",
+                "model_provider": "字节跳动",
+                "gen_type": "video",
+                "task_type": "image_to_video",
+                "gen_count": 1,
+                "output": {
+                        "video": {
+                                "resolution": "1080p",
+                                "ratio": "16:9",
+                                "duration": 8,
+                                "token": 390825,
+                                "has_audio": false,
+                                "enable_ref_video": null
+                        }
+                }
+        },
+        "biz_type": 3,
+        "user_id": 100431,
+        "canvas_id": 1114,
+        "task_id": 20335,
+        "node_id": "46424964-442c-4870-9bd2-7b26a69ed75c"
+}
+]
