@@ -199,4 +199,22 @@ export class GroupPage {
         const response = await this.sendMessage(text);
         await this.waitForReplyFinished({ ...opts, response });
     }
+
+    async getLastMessageText(): Promise<string> {
+        const ignoredTexts = ['查看新内容', '回到底部', '发送', '终止'];
+        const count = await this.messageList.count().catch(() => 0);
+
+        for (let index = count - 1; index >= 0; index -= 1) {
+            const text = (await this.messageList.nth(index).textContent().catch(() => ''))?.trim() ?? '';
+            if (!text) {
+                continue;
+            }
+            if (ignoredTexts.includes(text)) {
+                continue;
+            }
+            return text;
+        }
+
+        return (await this.main.textContent().catch(() => ''))?.trim() ?? '';
+    }
 }

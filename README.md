@@ -50,6 +50,7 @@ PlayWright_Demo/
 - 批量发送业务提示词
 - 多轮对话发送与回复完成等待
 - 图片类员工张数切换
+- 文本类员工回复的 AI 规范判断
 - 历史、清理、置顶、重命名、删除等管理场景
 
 ### 2. AI 群组
@@ -67,6 +68,7 @@ PlayWright_Demo/
 - 串行 `batch messaging`
 - 四群组并发发送 `parallel messaging`
 - 群组缺失时自动补齐
+- 群组最终文本回复的 AI 规范判断
 
 ### 3. Workflow
 
@@ -157,6 +159,23 @@ npx playwright show-report
 - `PW_USER=testUser|prodUser|lowBalanceUser`
 - `BASE_URL`
 - `PW_REFRESH_STATE=1`
+
+AI 回复判断相关环境变量：
+
+- `AI_ENABLED=1`
+- `AI_BASE_URL`
+- `AI_API_KEY`
+- `AI_JUDGE_MODEL` 或 `AI_RESPONSE_JUDGE_MODEL`
+- `AI_ALLOW_CONTEXT_UPLOAD=1`
+- `AI_RESPONSE_JUDGE_MODE=assert|audit|off`
+
+说明：
+
+- 当前 AI 只介入 `AI员工 / AI群组` 的文本回复质量判断，不介入 workflow 计费判断。
+- 规范判断重点看：相关性、清晰度、完整性、可执行性、专业性。
+- `assert` 模式下，若 AI 判断回复明显不规范，用例会失败；`audit` 模式只挂报告不拦截。
+- AI 判断结果会明确落盘到 `test-results/ai-response-judge/<project>/<module>/<scenario>/`，其中包含一份 `*-judge-report.json` 和一份 `*-reply.txt`。
+- `.env.local` 已加入忽略列表，推荐把 AI 相关配置放在本地文件里，不要提交到仓库。
 
 PowerShell 示例：
 

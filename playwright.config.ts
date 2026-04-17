@@ -3,13 +3,18 @@ import * as fs from 'fs';
 import * as path from 'path';
 import * as dotenv from 'dotenv';
 
-// Load .env (optional)
-// - Default: .env in repo root
+// Load dotenv files (optional)
 // - Override via ENV_FILE, e.g. ENV_FILE=.env.prod
-const envFile = process.env.ENV_FILE || '.env';
-const envPath = path.resolve(__dirname, envFile);
-if (fs.existsSync(envPath)) {
-  dotenv.config({ path: envPath });
+// - Default order: .env -> .env.local
+const envFiles = process.env.ENV_FILE
+  ? [process.env.ENV_FILE]
+  : ['.env', '.env.local'];
+
+for (const envFile of envFiles) {
+  const envPath = path.resolve(__dirname, envFile);
+  if (fs.existsSync(envPath)) {
+    dotenv.config({ path: envPath, override: envFile.endsWith('.local') });
+  }
 }
 
 function resolveBaseURL(): string {

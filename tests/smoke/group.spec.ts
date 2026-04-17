@@ -2,6 +2,7 @@ import { test, expect } from '@playwright/test'
 import { enterGroupPage } from '../helpers/navigation'
 import { GROUP_MESSAGE_TARGETS, GROUP_PROMPT_CASES } from '../data/group'
 import { collectPageContext } from '../../skills/page_context_collect'
+import { judgeAndAssertResponseQuality } from '../helpers/response-judge'
 
 async function runGroupPromptConversation(
     page: Parameters<typeof test>[0]['page'],
@@ -10,7 +11,7 @@ async function runGroupPromptConversation(
         prompt: string
         replyTimeoutMs: number
     },
-): Promise<void> {
+): Promise<string> {
     const groupPage = await enterGroupPage(page)
 
     await groupPage.ensureGroupAvailable(options.name)
@@ -24,6 +25,8 @@ async function runGroupPromptConversation(
         timeout: options.replyTimeoutMs,
         response: confirmResponse,
     })
+
+    return await groupPage.getLastMessageText()
 }
 
 test.afterEach(async ({ page }, testInfo) => {
@@ -50,9 +53,17 @@ test.describe('AI群组', () => {
         const replyTimeoutMs = Number(process.env.PW_GROUP_REPLY_TIMEOUT_MS || '420000')
 
         GROUP_PROMPT_CASES.forEach(({ name, prompt }) => {
-            test(`batch send: ${name}`, async ({ page }) => {
+            test(`batch send: ${name}`, async ({ page }, testInfo) => {
                 test.setTimeout(Math.max(perTestTimeoutMs, replyTimeoutMs * 2 + 60000))
-                await runGroupPromptConversation(page, { name, prompt, replyTimeoutMs })
+                const replyText = await runGroupPromptConversation(page, { name, prompt, replyTimeoutMs })
+                await judgeAndAssertResponseQuality({
+                    testInfo,
+                    moduleName: 'group',
+                    scenarioName: `batch send: ${name}`,
+                    roleName: name,
+                    userPrompt: `${prompt}\n\n确认`,
+                    replyText,
+                })
             })
         })
     })

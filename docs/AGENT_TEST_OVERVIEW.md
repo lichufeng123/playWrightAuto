@@ -8,6 +8,7 @@
 - 自愈能力：`ensureAgentAvailable(name)` 缺失时自动调用 `addAgent(name)` 并验证可见；`findAgentByName` 支持带编号后缀的模糊匹配。
 - 基础操作：`selectAgent` 选择员工，`newChat` 新建会话，`sendMessage` 发送内容（内置等待聊天输入框可用），`togglePinAgent` 置顶/取消，`renameAgent`、`deleteAgent`、`addAgent` 等维护类操作。
 - 辅助方法：批量删除保留指定名单的员工（`deleteAllAgentsExcept`）、清空历史（`clearAgentChatHistory`）、进入历史列表、截图/网络诊断等均封装在 Page Object 中，供用例复用。
+- 回复规范判断：文本类员工用例会读取最终回复，并调用 LLM 复核是否“规范”，而不是只检查“有字就算过”。
 
 ## tests/smoke/agent.spec.ts：用例结构与断言
 - 组织：使用 Playwright Test，基础 CRUD 与大部分批量场景以串行为主；图片生成并发场景单独放在 `test.describe.parallel` 中。
@@ -37,12 +38,38 @@
 - 串行 `batch messaging`
 - 四群组并发 `parallel messaging`
 - 两轮对话链路：长 prompt 回复完成后，再发送“确认”，并等待第二轮完成
+- `batch messaging` 会读取“确认”后的最终回复，并做 AI 规范判断
 
 设计上和员工模块保持一致：
 
 - `tests/data/` 存放群组名与 prompt
 - `group.page.ts` 只管定位、发送、等待和自愈
 - `group.spec.ts` 只组合场景，不写底层 selector
+
+## 补充：AI 回复规范判断
+
+相关文件：
+
+- [response-judge.flow.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/flows/response-judge.flow.ts)
+- [response-judge.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/tests/helpers/response-judge.ts)
+- [llm.api.ts](/c:/Users/Insight/PycharmProjects/PlayWright_Demo/api/llm.api.ts)
+
+当前 AI 判断只介入 `AI员工 / AI群组` 的文本回复，不介入 workflow。
+
+规范标准默认包含：
+
+- 与用户 prompt 强相关，不跑题
+- 表达清晰，没有乱码、明显重复和占位符
+- 方案/策略类问题要有基本结构和关键维度，不能只敷衍一句
+- 具备一定可执行性，而不是纯空话
+- 专业自然，不出现明显不合理拒答或自相矛盾
+
+结果存储位置：
+
+- 每次 AI 判断都会把结果落到 `test-results/ai-response-judge/<project>/<module>/<scenario>/`
+- 目录里至少会有：
+  - `*-judge-report.json`：结构化判断结果，含 prompt、回复文本、AI verdict 和原因
+  - `*-reply.txt`：被判断的原始回复文本
 
 ## 运行与环境
 - 通过 `playwright.config.ts` + `auth/global-setup.ts` 统一环境与账号：`PW_ENV`/`PW_USER` 自动选择 baseURL 与登录态，`storageState` 持久化在 `playwright/.auth/`。

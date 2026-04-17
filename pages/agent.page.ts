@@ -1,4 +1,4 @@
-import { Page, Locator, expect } from '@playwright/test'
+import { Page, Locator, Response, expect } from '@playwright/test'
 
 export class AgentPage {
     readonly page: Page;
@@ -98,31 +98,55 @@ export class AgentPage {
         }
     }
 
+    private async captureReplyResponse(timeout = 15000): Promise<Response | null> {
+        return await this.page.waitForResponse(
+            res => this.streamUrlPattern.test(res.url()) && res.request().method() === 'POST',
+            { timeout }
+        ).catch(() => null);
+    }
+
+    private async waitForResponseFinished(response: Response | null, timeoutMs: number): Promise<void> {
+        if (!response) {
+            return;
+        }
+
+        await Promise.race([
+            response.finished().catch(() => null),
+            new Promise((_, reject) => {
+                setTimeout(() => reject(new Error('等待员工回复流结束超时')), timeoutMs);
+            }),
+        ]).catch(() => undefined);
+    }
+
     // 发送消息（不包含等待回复结束）
-    async sendMessage(text: string): Promise<void> {
+    async sendMessage(text: string): Promise<Response | null> {
         await this.waitForChatReady();
         const input = await this.resolveChatInput();
         await input.fill('');
         await input.fill(text);
         await expect(this.sendButton).toBeEnabled({ timeout: 10000 });
+        const responsePromise = this.captureReplyResponse(15000);
         await Promise.all([
-            this.waitForReplyStarted({ timeout: 15000 }).catch(() => {}),
+            responsePromise,
             this.sendButton.click()
         ]);
+        return await responsePromise;
     }
 
     // 多轮对话发送：适用于上一轮回复后发送按钮暂不可用的场景，先输入再校验可用
-    async sendMessageInOngoingChat(text: string): Promise<void> {
+    async sendMessageInOngoingChat(text: string): Promise<Response | null> {
         await expect(this.sendButton).toBeVisible({ timeout: 30000 });
         const input = await this.resolveChatInput();
         await expect(input).toBeEditable({ timeout: 30000 });
         await input.fill('');
         await input.fill(text);
         await expect(this.sendButton).toBeEnabled({ timeout: 10000 });
+        const responsePromise = this.captureReplyResponse(15000);
         await Promise.all([
-            this.waitForReplyStarted({ timeout: 15000 }).catch(() => {}),
+            responsePromise,
             this.sendButton.click()
         ]);
+        return await responsePromise;
     }
 
     // 等回复开始：仅依赖流式请求发起
@@ -135,10 +159,15 @@ export class AgentPage {
     }
     
     // 等回复完成：终止按钮恢复为发送按钮
-    async waitForReplyFinished(opts?: { timeout?: number }): Promise<void> {
+    async waitForReplyFinished(opts?: { timeout?: number; response?: Response | null }): Promise<void> {
         const timeout = opts?.timeout ?? 60000;
         const start = Date.now();
         const remaining = () => Math.max(500, timeout - (Date.now() - start));
+        const uiRecoveryTimeout = () => Math.min(30000, Math.max(2000, remaining()));
+        const responseFinishedPromise = this.waitForResponseFinished(
+            opts?.response ?? null,
+            Math.min(5000, timeout),
+        ).catch(() => undefined);
 
         // 等“终止”出现（如果存在终止态）
         await this.stopButton.waitFor({ state: 'visible', timeout: remaining() }).catch(() => {});
@@ -146,21 +175,72 @@ export class AgentPage {
         await this.stopButton.waitFor({ state: 'hidden', timeout: remaining() }).catch(() => {});
         await this.sendButton.waitFor({ state: 'visible', timeout: remaining() }).catch(() => {});
         try {
-            await expect(this.sendButton).toBeEnabled({ timeout: remaining() });
+            await expect(this.sendButton).toBeEnabled({ timeout: uiRecoveryTimeout() });
         } catch {
             const input = await this.resolveChatInput();
-            await expect(input).toBeEditable({ timeout: remaining() });
+            await expect(input).toBeEditable({ timeout: uiRecoveryTimeout() });
         }
+
+        // 员工回复接口经常是流式/SSE，UI 已恢复时网络流可能还没完全关闭。
+        // 这里最多补等一小会儿网络收尾，不能让 response.finished() 卡住下一轮“确认”。
+        await Promise.race([
+            responseFinishedPromise,
+            new Promise(resolve => setTimeout(resolve, 300)),
+        ]);
     }
 
     // 发送并等待回复完成
     async sendAndWaitReply(text: string, opts?: { timeout?: number; ensureMessageStable?: boolean }): Promise<void> {
-        await this.sendMessage(text);
-        await this.waitForReplyFinished(opts);
+        const response = await this.sendMessage(text);
+        await this.waitForReplyFinished({ ...opts, response });
     }
 
     async getLastMessageText(): Promise<string> {
-        return (await this.lastMessage.textContent().catch(() => ''))?.trim() ?? '';
+        const ignoredTexts = ['查看新内容', '回到底部', '发送', '终止'];
+        const count = await this.messageList.count().catch(() => 0);
+
+        for (let index = count - 1; index >= 0; index -= 1) {
+            const text = (await this.messageList.nth(index).textContent().catch(() => ''))?.trim() ?? '';
+            if (!text) {
+                continue;
+            }
+            if (ignoredTexts.includes(text)) {
+                continue;
+            }
+            return text;
+        }
+
+        return (await this.main.textContent().catch(() => ''))?.trim() ?? '';
+    }
+
+    async getGeneratedProductCount(): Promise<number> {
+        return await this.main.locator('img[alt*="preview" i], video').evaluateAll(nodes =>
+            nodes.filter(node => {
+                const rect = node.getBoundingClientRect();
+                const src =
+                    node.getAttribute('src') ||
+                    node.getAttribute('poster') ||
+                    '';
+                return rect.width >= 80 && rect.height >= 80 && Boolean(src);
+            }).length,
+        ).catch(() => 0);
+    }
+
+    // 图片 / 视频类员工会直接产出媒体，不需要再发“确认”。
+    // 这里通过可见媒体数量增长来判断生成完成，避免把它们误判成文本多轮对话。
+    async waitForGeneratedProduct(opts?: { timeout?: number; previousCount?: number }): Promise<number> {
+        const previousCount = opts?.previousCount ?? 0;
+        const timeout = opts?.timeout ?? 180000;
+
+        await expect.poll(
+            async () => await this.getGeneratedProductCount(),
+            {
+                timeout,
+                intervals: [1000, 1500, 2000, 3000],
+            }
+        ).toBeGreaterThan(previousCount);
+
+        return await this.getGeneratedProductCount();
     }
 
     // 添加员工逻辑
@@ -178,6 +258,11 @@ export class AgentPage {
         await searchInput.clear();
         await searchInput.fill(name);
         console.log(`[addAgent] Search filled with: "${name}"`);
+        const notFoundTip = dialog.getByText('未找到相关员工');
+        await notFoundTip.waitFor({ state: 'visible', timeout: 1500 }).catch(() => undefined);
+        if (await notFoundTip.isVisible().catch(() => false)) {
+            throw new Error(`当前环境未提供员工 "${name}"，无法自动补齐`);
+        }
 
         // 等待特定的搜索结果出现，并将其作为容器
         // 使用更精确的定位器过滤
