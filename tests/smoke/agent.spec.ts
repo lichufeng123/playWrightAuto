@@ -14,6 +14,8 @@ async function runAgentPromptConversation(
         prompt: string
         replyTimeoutMs: number
         replyMode: 'text' | 'product'
+        messages?: string[]
+        followUpPrompts?: string[]
     },
 ): Promise<string> {
     const agentPage = await enterAgentPage(page)
@@ -32,11 +34,17 @@ async function runAgentPromptConversation(
         })
     } else {
         await agentPage.sendAndWaitReply(options.prompt, { timeout: options.replyTimeoutMs })
-        const confirmResponse = await agentPage.sendMessageInOngoingChat('1：A；2：C；3：D')
-        await agentPage.waitForReplyFinished({
-            timeout: options.replyTimeoutMs,
-            response: confirmResponse,
-        })
+
+        // 文本类员工有些是分步问答：第一轮会先反问用户选择项。
+        // messages 里放几条，就继续发几轮；followUpPrompts 保留兼容旧写法。
+        const messages = options.messages ?? options.followUpPrompts ?? ['1：A；2：C；3：D']
+        for (const message of messages) {
+            const followUpResponse = await agentPage.sendMessageInOngoingChat(message)
+            await agentPage.waitForReplyFinished({
+                timeout: options.replyTimeoutMs,
+                response: followUpResponse,
+            })
+        }
     }
 
     const safeName = options.name.replace(/[^a-z0-9\u4e00-\u9fa5]/gi, '_')
@@ -145,6 +153,42 @@ test.describe('text batch messaging', () => {
         test(`text send Message: ${name}`, async ({ page }) => {
             test.setTimeout(Math.max(perTestTimeoutMs, replyTimeoutMs * 2 + 60000));
             await runAgentPromptConversation(page, { name, prompt, replyTimeoutMs, replyMode })
+        })
+    })
+})
+
+test.describe('text multi-round batch messaging', () => {
+    test.describe.configure({ mode: 'serial' });
+    const perTestTimeoutMs = Number(process.env.PW_TEXT_MULTI_ROUND_TEST_TIMEOUT_MS || '300000');
+    const replyTimeoutMs = Number(process.env.PW_AGENT_REPLY_TIMEOUT_MS || '240000');
+    const messages = [
+        '1：A；2：C；3：D',
+        '1：C；2：B；3：A',
+        '请基于前面的信息，先整理一版结构化分析框架，包含目标、关键问题、核心洞察和执行方向。',
+        '请继续补充更具体的策略建议，要求分点说明，每一点都要说明适用场景和预期效果。',
+        '请从用户/受众视角再分析一次，补充他们的核心需求、决策顾虑和可能被打动的理由。',
+        '请补充竞品或替代方案视角，说明我们应该如何形成差异化，不需要编造具体数据。',
+        '请把方案进一步落成可执行步骤，按短期、中期、长期三个阶段拆解。',
+        '请补充风险点和应对措施，重点关注执行风险、传播风险、成本风险和效果不确定性。',
+        '请输出一版最终总结，要求包含结论、优先级建议和下一步行动清单。',
+        '确认，请开始执行并输出最终完整版本。',
+    ]
+
+    const batchCount = Number(process.env.PW_TEXT_MULTI_ROUND_COUNT || '')
+    const textAgentCasesToTest = Number.isFinite(batchCount) && batchCount > 0
+        ? AGENT_TEXT_PROMPT_CASES.slice(0, batchCount)
+        : AGENT_TEXT_PROMPT_CASES
+
+    textAgentCasesToTest.forEach(({ name, prompt, replyMode }) => {
+        test(`text multi-round send Message: ${name}`, async ({ page }) => {
+            test.setTimeout(Math.max(perTestTimeoutMs, replyTimeoutMs * (messages.length + 1) + 60000));
+            await runAgentPromptConversation(page, {
+                name,
+                prompt,
+                replyTimeoutMs,
+                replyMode,
+                messages,
+            })
         })
     })
 })
