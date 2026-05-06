@@ -1,0 +1,820 @@
+{
+  "summary": "从人工 XMind 导入 67 条测试点。",
+  "source_xmind": "C:\\Users\\Insight\\PycharmProjects\\PlayWright_Demo\\prd\\智能分镜脚本测试点.xmind",
+  "source_prd": "C:\\Users\\Insight\\PycharmProjects\\PlayWright_Demo\\prd\\V3.4需求PRD-智能分镜脚本.docx",
+  "generated_at": "2026-04-28T10:50:10",
+  "test_points": [
+    {
+      "id": "TP-001",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "扣费",
+        "按照预设价格进行扣费"
+      ],
+      "sourceTitle": "按照预设价格进行扣费",
+      "testPoint": "预扣成功后，按钮置灰并显示「生成中...」loading状态（加载动画与系统全局一致），画布内显示半透明加载蒙版，防止误操作。",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-002",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "扣费",
+        "失败"
+      ],
+      "sourceTitle": "失败",
+      "testPoint": "赛点不足，弹窗提示「赛点不足，无法生成，请补充赛点」，提供「前往充值」和「取消」按钮",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-003",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "扣费",
+        "失败"
+      ],
+      "sourceTitle": "失败",
+      "testPoint": "生成失败返还赛点",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-004",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "自定义模式",
+        "文本、图片、视频输入"
+      ],
+      "sourceTitle": "文本、图片、视频输入",
+      "testPoint": "只要输入物有文本、图片、视频\n之中的任何一个模态，均可选择该模式",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-005",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "自定义模式"
+      ],
+      "sourceTitle": "自定义模式",
+      "testPoint": "生成的脚本需有逻辑，与表头对应的上",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-006",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "剧本生成模式"
+      ],
+      "sourceTitle": "剧本生成模式",
+      "testPoint": "文本输入",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-007",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "视频反推模式"
+      ],
+      "sourceTitle": "视频反推模式",
+      "testPoint": "视频输入",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-008",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "视频反推模式"
+      ],
+      "sourceTitle": "视频反推模式",
+      "testPoint": "大小不超过100MB",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-009",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "视频反推模式"
+      ],
+      "sourceTitle": "视频反推模式",
+      "testPoint": "上传不符合要求的视频时，弹窗提示具体错误原因，并提供重新上传按钮",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-010",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "视频反推模式",
+        "视频节点增加“视频反推”快捷操作"
+      ],
+      "sourceTitle": "视频节点增加“视频反推”快捷操作",
+      "testPoint": "调用后自动连接该工具节点",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-011",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式"
+      ],
+      "sourceTitle": "一键分镜模式",
+      "testPoint": "输入框自动显示预设Prompt模板",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-012",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式",
+        "文本、图片输入"
+      ],
+      "sourceTitle": "文本、图片输入",
+      "testPoint": "至少连入图片才能亮起",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-013",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式"
+      ],
+      "sourceTitle": "一键分镜模式",
+      "testPoint": "输入框下方显示宫格数量下拉选择栏",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-014",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式",
+        "分镜显示规则"
+      ],
+      "sourceTitle": "分镜显示规则",
+      "testPoint": "按顺序从上往下，从左往右按序排入表格中",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-015",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式",
+        "分镜显示规则"
+      ],
+      "sourceTitle": "分镜显示规则",
+      "testPoint": "初选比例输出表格后，若改变表格显示比例，则宫格内的图像自行适配显示，超出单元格最大边界外的图像内容不予显示",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-016",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式",
+        "分镜显示规则"
+      ],
+      "sourceTitle": "分镜显示规则",
+      "testPoint": "允许单个单元格中的图像移动显示：以单元格最大外框为准，图像在单元格内可自由移动，不支持图像在单元格内放大缩小，超出单元格最大边界则无显示",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-017",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "模式",
+        "一键分镜模式",
+        "分镜显示规则"
+      ],
+      "sourceTitle": "分镜显示规则",
+      "testPoint": "重新生成分镜需弹窗确认",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-018",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "默认规则"
+      ],
+      "sourceTitle": "默认规则",
+      "testPoint": "输出结果时，在工具节点后面自动生成表格与之连接",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-019",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "默认规则"
+      ],
+      "sourceTitle": "默认规则",
+      "testPoint": "输入的文本提示词限制2000字",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-020",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "默认规则"
+      ],
+      "sourceTitle": "默认规则",
+      "testPoint": "生成执行完成后，自动关闭加载蒙版",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-021",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "默认规则"
+      ],
+      "sourceTitle": "默认规则",
+      "testPoint": "以表格形式输出",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-022",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "默认规则",
+        "输出结果以表格形式展示，表格列项与输入Prompt模板"
+      ],
+      "sourceTitle": "输出结果以表格形式展示，表格列项与输入Prompt模板",
+      "testPoint": "「序号、关键帧图像、场景描述词（即后面的文本合集）、核心描述、风格设定、相机运镜、光影设计、场景环境、核心元素、动态效果、结尾处理、关键词」",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-023",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "默认规则"
+      ],
+      "sourceTitle": "默认规则",
+      "testPoint": "切换模式时，提示当前的接入物可接入哪些模式",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-024",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格数",
+        "输入行列数进行整体调整"
+      ],
+      "sourceTitle": "输入行列数进行整体调整",
+      "testPoint": "调整后是缩减范围时，弹窗提示窗",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-025",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格数",
+        "首行首列调整"
+      ],
+      "sourceTitle": "首行首列调整",
+      "testPoint": "左右/上下插入一行/列",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-026",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格数"
+      ],
+      "sourceTitle": "调整栅格数",
+      "testPoint": "行数和列数上限为99，超出不做显示",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-027",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格数"
+      ],
+      "sourceTitle": "调整栅格数",
+      "testPoint": "支持在上限99以内，增减单行/单列（限制新增数量为1）",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-028",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格数"
+      ],
+      "sourceTitle": "调整栅格数",
+      "testPoint": "删除该行/列",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-029",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格大小"
+      ],
+      "sourceTitle": "调整栅格大小",
+      "testPoint": "最大均无限制",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-030",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格大小",
+        "拖拽至最小时出现蓝色预览线停止不动"
+      ],
+      "sourceTitle": "拖拽至最小时出现蓝色预览线停止不动",
+      "testPoint": "表头高度固定40px",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-031",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格大小",
+        "拖拽至最小时出现蓝色预览线停止不动"
+      ],
+      "sourceTitle": "拖拽至最小时出现蓝色预览线停止不动",
+      "testPoint": "宽高最小200px",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-032",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格大小",
+        "拖拽至最小时出现蓝色预览线停止不动"
+      ],
+      "sourceTitle": "拖拽至最小时出现蓝色预览线停止不动",
+      "testPoint": "序号列宽最小80px",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-033",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格位置"
+      ],
+      "sourceTitle": "调整栅格位置",
+      "testPoint": "选定列/行后hover为蓝色",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-034",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格位置",
+        "整行和整列的整体拖拽移动"
+      ],
+      "sourceTitle": "整行和整列的整体拖拽移动",
+      "testPoint": "显示蓝色中间预览线",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-035",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "调整栅格位置",
+        "整行和整列的整体拖拽移动"
+      ],
+      "sourceTitle": "整行和整列的整体拖拽移动",
+      "testPoint": "列/行背景为黑色遮罩",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-036",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "全屏"
+      ],
+      "sourceTitle": "全屏",
+      "testPoint": "末展开时，总表最大尺寸限制宽高为2000px*1200px",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-037",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "全屏"
+      ],
+      "sourceTitle": "全屏",
+      "testPoint": "点击展开，则直接在画布展开所有的内容",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-038",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作"
+      ],
+      "sourceTitle": "分镜脚本整体操作",
+      "testPoint": "双击进入编辑状态",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-039",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作"
+      ],
+      "sourceTitle": "分镜脚本整体操作",
+      "testPoint": "导出下载",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-040",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作"
+      ],
+      "sourceTitle": "分镜脚本整体操作",
+      "testPoint": "退出编辑",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-041",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "删除"
+      ],
+      "sourceTitle": "删除",
+      "testPoint": "弹窗提示",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-042",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作"
+      ],
+      "sourceTitle": "分镜脚本整体操作",
+      "testPoint": "复制",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-043",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "撤销操作"
+      ],
+      "sourceTitle": "撤销操作",
+      "testPoint": "Ctrl+Z",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-044",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "分镜脚本整体操作",
+        "撤销操作"
+      ],
+      "sourceTitle": "撤销操作",
+      "testPoint": "最大溯源步骤为20步",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-045",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "预览"
+      ],
+      "sourceTitle": "预览",
+      "testPoint": "预览后可下载",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-046",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "预览"
+      ],
+      "sourceTitle": "预览",
+      "testPoint": "放大/缩小预览内容",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-047",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "预览"
+      ],
+      "sourceTitle": "预览",
+      "testPoint": "显示个数/总数",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-048",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "预览"
+      ],
+      "sourceTitle": "预览",
+      "testPoint": "预览页可切换上下一个内容",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-049",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作"
+      ],
+      "sourceTitle": "栅格节点操作",
+      "testPoint": "下载",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-050",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "上传",
+        "图片来源"
+      ],
+      "sourceTitle": "图片来源",
+      "testPoint": "资产库",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-051",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "上传",
+        "图片来源"
+      ],
+      "sourceTitle": "图片来源",
+      "testPoint": "本地图片",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-052",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "上传"
+      ],
+      "sourceTitle": "上传",
+      "testPoint": "上传显示进度",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-053",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "上传"
+      ],
+      "sourceTitle": "上传",
+      "testPoint": "可中断上传",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-054",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "删除"
+      ],
+      "sourceTitle": "删除",
+      "testPoint": "弹窗提示",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-055",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "拖拽"
+      ],
+      "sourceTitle": "拖拽",
+      "testPoint": "支持用户从表格拖拽单元格内的内容拽入画布，拖拽后不需要删除原位置的图片，且自动生成对应的文本节点、图片节点、视频节点",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-056",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "拖拽",
+        "支持用户将画布里的独立节点拖拽入单元格"
+      ],
+      "sourceTitle": "支持用户将画布里的独立节点拖拽入单元格",
+      "testPoint": "如果单元格本身有内容，则覆盖",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-057",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "拖拽",
+        "支持用户将画布里的独立节点拖拽入单元格"
+      ],
+      "sourceTitle": "支持用户将画布里的独立节点拖拽入单元格",
+      "testPoint": "hover靠近的时候，单元格内容变成拖拽物内容",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-058",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "拖拽",
+        "支持用户将画布里的独立节点拖拽入单元格"
+      ],
+      "sourceTitle": "支持用户将画布里的独立节点拖拽入单元格",
+      "testPoint": "拖进表格之后，原节点不删除",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-059",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "拖拽"
+      ],
+      "sourceTitle": "拖拽",
+      "testPoint": "支持单元格里不同内容互相拖搜互换位置",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-060",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "外部素材替换"
+      ],
+      "sourceTitle": "外部素材替换",
+      "testPoint": "资产库",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-061",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "外部素材替换"
+      ],
+      "sourceTitle": "外部素材替换",
+      "testPoint": "本地图片",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-062",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "文本"
+      ],
+      "sourceTitle": "文本",
+      "testPoint": "可编辑",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-063",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "文本"
+      ],
+      "sourceTitle": "文本",
+      "testPoint": "超长自动缩略",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-064",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "文本"
+      ],
+      "sourceTitle": "文本",
+      "testPoint": "缩略后可双击查看全部",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-065",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作",
+        "文本"
+      ],
+      "sourceTitle": "文本",
+      "testPoint": "复制",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-066",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "栅格节点操作"
+      ],
+      "sourceTitle": "栅格节点操作",
+      "testPoint": "视频、音频可播放",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    },
+    {
+      "id": "TP-067",
+      "module": "智能分镜脚本",
+      "modulePath": [
+        "智能分镜脚本",
+        "异常、边界",
+        "输入图片/视频节点包含无效图像内容（空白、损坏）"
+      ],
+      "sourceTitle": "输入图片/视频节点包含无效图像内容（空白、损坏）",
+      "testPoint": "点击生成按钮时提示「输入图片无效，请更换输入源」",
+      "source": "人工 XMind 测试点：智能分镜脚本测试点.xmind；关联 PRD：V3.4需求PRD-智能分镜脚本.docx"
+    }
+  ]
+}

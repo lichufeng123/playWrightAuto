@@ -1,0 +1,10 @@
+{
+  "prd": "C:\\Users\\Insight\\PycharmProjects\\PlayWright_Demo\\prd\\V3.4需求PRD-智能分镜脚本.docx",
+  "manual_xmind": "C:\\Users\\Insight\\PycharmProjects\\PlayWright_Demo\\prd\\智能分镜脚本测试点.xmind",
+  "run_dir": "C:\\Users\\Insight\\PycharmProjects\\PlayWright_Demo\\output\\ai-testcase-generation\\V3.4需求PRD-智能分镜脚本",
+  "generated_at": "2026-04-28T10:50:10",
+  "allow_prd_mismatch": false,
+  "steps": {
+    "import_manual_xmind": true
+  }
+}
